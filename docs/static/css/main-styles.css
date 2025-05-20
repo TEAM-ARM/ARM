@@ -431,7 +431,9 @@ body {
 .length-marker::after {
   content: attr(data-length);
   position: absolute;
-  top: -35px;
+  padding-left: 5px;
+  top: auto;
+  bottom: 22px;
   white-space: nowrap;
   font-family: 'Open Sans', 'Roboto', 'Arial', sans-serif;
   font-size: 0.8rem;
@@ -445,16 +447,6 @@ body {
   transform: translateY(-2px);
 }
 
-@media (max-width: 600px) {
-  .length-visualization {
-    height: 140px;
-  }
-  
-  .length-marker::after {
-    font-size: 0.7rem;
-    top: -30px;
-  }
-}
 
 /* Reasoning pattern visualization */
 .reasoning-pattern-viz {
@@ -779,210 +771,28 @@ body {
 
 /* 移动端适配样式 */
 @media screen and (max-width: 768px) {
-  .section {
-    padding: 3rem 1rem;
-  }
-
-  .feature-card {
-    margin-bottom: 1.5rem;
-  }
-
-  .comparison-container {
-    padding: 1rem;
-  }
-
-  .comparison-body {
-    flex-direction: column;
-  }
-
-  .comparison-column {
-    margin-bottom: 1rem;
-  }
-
-  .comparison-column:first-child {
-    margin-right: 0;
-  }
-
-  .interactive-demo {
-    padding: 1rem;
-  }
-
-  .result-metric {
-    padding: 1rem;
-  }
-
-  .result-value {
-    font-size: 2rem;
-  }
-
-  .result-value-small {
-    font-size: 1.5rem;
-  }
-
-  .method-step {
-    padding: 1rem;
-  }
-
-  .reasoning-pattern-viz {
-    flex-direction: column;
-  }
-
-  .pattern-column {
-    margin-bottom: 1rem;
-  }
-
-  .pattern-column:first-child {
-    margin-right: 0;
-  }
-
-  .gauge-popup {
-    min-width: 90%;
-    padding: 1.5rem;
-  }
-
-  .gauge-popup-text {
-    font-size: 1.2rem;
-  }
-
-  .length-visualization {
-    height: 120px;
-    margin: 2rem auto;
-  }
-
   .length-marker::after {
-    font-size: 0.7rem;
-    top: -25px;
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 50px;
+    
   }
-
-  .length-answer {
-    font-size: 1rem;
-    bottom: 5px;
-  }
-
-  .length-label {
-    font-size: 0.8rem;
-    bottom: 100px;
-  }
-
-  .length-capsule {
-    height: 50px;
-    margin: 2rem auto;
-  }
-
-  .capsule-label {
+  .length-answer{
     font-size: 0.9rem;
-    padding: 0.3em 0.8em;
-  }
-
-  .navbar {
-    padding: 0.5rem;
-  }
-
-  .navbar-item {
-    padding: 0.5rem 0.75rem;
-  }
-
-  .chart-controls {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .chart-control-btn {
-    margin: 0.25rem;
-  }
-
-  .interactive-chart-container {
-    height: 300px;
-  }
-
-  .example-box {
-    padding: 1rem;
-  }
-
-  .prompt-box, .response-box {
-    padding: 0.75rem;
-  }
-
-  .token-counter {
-    font-size: 0.8rem;
-  }
-}
-
-/* 小屏幕手机适配 */
-@media screen and (max-width: 480px) {
-  .section {
-    padding: 2rem 0.75rem;
-  }
-
-  .result-value {
-    font-size: 1.75rem;
-  }
-
-  .result-value-small {
-    font-size: 1.25rem;
-  }
-
-  .gauge-popup {
-    padding: 1rem;
-  }
-
-  .gauge-popup-text {
-    font-size: 1rem;
-  }
-
-  .length-visualization {
-    height: 100px;
-  }
-
-  .length-marker::after {
-    font-size: 0.65rem;
-    top: -20px;
-  }
-
-  .length-answer {
-    font-size: 0.9rem;
-  }
-
-  .length-label {
-    font-size: 0.75rem;
-    bottom: 80px;
   }
 }
 
 /* 针对 length-visualization 和 length-capsule 的移动端适配优化 */
 @media screen and (max-width: 480px) {
-  .length-visualization,
-  .length-capsule {
-    max-width: 98vw;
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .length-capsule-content, .length-visualization {
-    font-size: 0.75rem;
-    padding: 0 0.5em;
-  }
-  .capsule-label {
-    font-size: 0.7rem;
-    padding: 0.2em 0.5em;
-    word-break: break-all;
-    white-space: normal;
-  }
   .length-marker::after {
-    font-size: 0.6rem;
-    top: -18px;
-    max-width: 50px;
-    left: 50%;
-    transform: translateX(-50%);
     white-space: normal;
-    word-break: break-all;
-    text-align: center;
-    color: #222 !important;
-    text-shadow: 0 1px 2px #fff, 0 0 2px #fff;
+    word-wrap: break-word;
+    max-width: 60px;
+    top:auto;
+    bottom: 25px;
+    margin-left: 5px;
   }
-  .length-capsule-content {
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 0 0.2em;
+  .length-answer{
+    font-size: 0.9rem;
   }
 } 
