@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="ARM: Adaptive Reasoning Model">
+  <meta name="keywords" content="language models, reasoning, reinforcement learning, adaptive reasoning">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARM: Adaptive Reasoning Model</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600|Roboto:400,500&display=swap" rel="stylesheet">
+
+  <!-- Load stylesheets -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="static/css/chart-controls.css">
+  <link rel="stylesheet" href="static/css/aime-chart.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  
+  <!-- Load Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Load custom JavaScript -->
+  <script src="static/js/main.js"></script>
+  <script src="static/js/chart-controls.js"></script>
+  <script src="static/js/citation-copy.js"></script>
+  <script src="static/js/chart-visualization.js"></script>
+  <script src="static/js/aime-chart.js"></script>
+  <script src="static/js/method-tabs.js"></script>
+  <script src="static/js/interactive-comparison.js"></script>
+  <script src="static/js/model-comparison-chart.js"></script>
+  <script src="static/js/gauge-pointer.js"></script>
+  <script src="static/js/length-visualization.js"></script>
+
+  <!-- Main styles moved to external CSS file -->
+  <link rel="stylesheet" href="static/css/main-styles.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="#">
+        L1
+      </a>
+    </div>
+    
+    <div class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#motivation">Motivation</a>
+        <a class="navbar-item" href="#method">Method</a>
+        <a class="navbar-item" href="#results">Results</a>
+        <a class="navbar-item" href="#interactive">Interactive</a>
+        <a class="navbar-item" href="#findings">Findings</a>
+        <a class="navbar-item" href="#interactive">Compare Models</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero is-fullheight">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+
+      <div class="gauge-container">
+        <svg class="gauge" width="180" height="180" viewBox="0 0 220 220">
+          <g id="gauge-arcs"></g>
+          <image href="static/images/brain.png" x="30" y="30" width="160" height="160" style="pointer-events:none;"/>
+          <line id="gauge-pointer" x1="110" y1="110" x2="110" y2="38" />
+          <circle class="gauge-pointer-dot" cx="110" cy="110" r="13"/>
+        </svg>
+      </div>
+      
+      <h1 class="title is-1 mb-6" style="font-size: 3.5rem;">ARM: Adaptive Reasoning Model</h1>
+      <h2 class="subtitle is-3 mb-6">Reasoning Models Capable of Adaptively Selecting Appropriate Reasoning Formats!</h2>
+
+      <!-- Animated length visualization -->
+      <div class="length-visualization">
+        <div class="length-marker" data-length="&nbsp;&nbsp;Direct Answer"></div>
+        <div class="length-marker" data-length="Short CoT"></div>
+        <div class="length-marker" data-length="Code"></div>
+        <div class="length-marker" data-length="Long CoT"></div>
+        <div class="length-bar" id="heroLengthBar">
+          <div class="length-progress" id="heroLengthProgress"></div>
+        </div>
+        <div class="length-label">Think for 10 Tokens</div>
+        <div class="length-answer">The Answer is (A).</div>
+      </div>
+
+      <div class="is-size-5 publication-authors">
+        <span class="author-block">
+          <a href="https://scholar.google.com/citations?user=0l2j2ygAAAAJ">Siye Wu</a><sup
+            style="color:#6fbf73;">1</sup>,
+        </span>
+        <span class="author-block">
+          <a href="https://hsaest.github.io/">Jian Xie†</a><sup style="color:#6fbf73;">1</sup>,</span>
+        <span class="author-block">
+          <a href="https://ykzhang721.github.io/">Yikai Zhang</a><sup style="color:#6fbf73;">1</sup>,
+        </span>
+        <span class="author-block">
+          <a href="https://scholar.google.com/citations?user=0l2j2ygAAAAJ">Aili Chen</a><sup
+            style="color:#6fbf73;">1</sup>,
+        </span>
+        <span class="author-block">
+          <a href="https://drogozhang.github.io/">Kai Zhang</a><sup style="color:#ed4b82;">2</sup>,</span>
+        <span class="author-block">
+        <span class="author-block">
+          <a href="https://ysu1989.github.io/">Yu Su</a><sup style="color:#ed4b82;">2</sup>,
+        </span>
+        <span class="author-block">
+          <a href="https://scholar.google.com/citations?user=odFW4FoAAAAJ">Yanghua Xiao</a><sup
+            style="color:#6fbf73;">1</sup>,
+        </span>
+      </div>
+
+      <div class="is-size-5 publication-authors">
+        <span class="author-block"><sup style="color:#6fbf73;">1</sup>Fudan University</span>
+        <span class="author-block"><sup style="color:#ed4b82">2</sup>The Ohio State University</span><br>
+        <span class="author-block">† Project Lead</span><br>
+        <span class="author-block">‡ Corresponding to 
+          <a href="mailto:siyewu24@m.fudan.edu.cn">siyewu24@m.fudan.edu.cn</a>, 
+          <a href="mailto:jianx0321@gmail.com">jianx0321@gmail.com</a>
+      </div>
+    </br>
+      <div class="buttons is-centered">
+        <a href="https://arxiv.org/abs/2503.04697" class="button is-rounded is-dark is-medium">
+          <span class="icon"><i class="ai ai-arxiv"></i></span>
+          <span>Paper</span>
+        </a>
+        <a href="https://github.com/cmu-l3/l1" class="button is-rounded is-dark is-medium">
+          <span class="icon"><i class="fab fa-github"></i></span>
+          <span>Code</span>
+        </a>
+        <!-- Model -->
+         <a href="https://huggingface.co/collections/l3lab/l1-67cacf4e39c176ca4e9890f4" class="button is-rounded is-dark is-medium">
+          <span class="icon"><i class="fab fa-huggingface">🤗</i></span>
+          <span>Model</span>
+        </a>
+        <!-- Colab -->
+         <a href="https://colab.research.google.com/drive/1E7A327gO5ph06-kZ6E71AWmqQxLE0kqX?usp=sharing" class="button is-rounded is-dark is-medium">
+          <span class="icon"><i class="fas fa-flask"></i></span>
+          <span>Colab</span>
+        </a>
+        <a href="#interactive" class="button is-rounded is-dark is-medium">
+          <span class="icon"><i class="fas fa-flask"></i></span>
+          <span>Compare Models</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="hero-foot">
+    <div class="container has-text-centered">
+      <a href="#motivation" class="icon is-large has-text-primary">
+        <i class="fas fa-chevron-down fa-2x"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Motivation Section -->
+<section class="section" id="motivation">
+  <div class="container">
+    <h2 class="title is-2 has-text-centered mb-6">The Challenge of Length Control</h2>
+    
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p class="is-size-5">
+            Reasoning language models have shown an uncanny ability to improve performance at test-time by "thinking longer"—that is, by generating longer chain-of-thought sequences and hence using more compute. However, these models lack dynamic control over output length, leading to three critical problems:
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="columns is-multiline">
+      <div class="column is-4">
+        <div class="card feature-card">
+          <div class="card-content">
+            <div class="has-text-centered">
+              <span class="icon feature-icon">
+                <i class="fas fa-microchip"></i>
+              </span>
+            </div>
+            <h3 class="title is-4">Computational Waste</h3>
+            <p>
+              In some cases, sequences span tens of thousands of tokens, wasting compute when shorter reasoning would suffice.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="column is-4">
+        <div class="card feature-card">
+          <div class="card-content">
+            <div class="has-text-centered">
+              <span class="icon feature-icon">
+                <i class="fas fa-ban"></i>
+              </span>
+            </div>
+            <h3 class="title is-4">Premature Halting</h3>
+            <p>
+              Without length control, models may stop too early on complex problems, failing to allocate enough reasoning steps.
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="column is-4">
+        <div class="card feature-card">
+          <div class="card-content">
+            <div class="has-text-centered">
+              <span class="icon feature-icon">
+                <i class="fas fa-balance-scale"></i>
+              </span>
+            </div>
+            <h3 class="title is-4">Unexplored Trade-offs</h3>
+            <p>
+              There is no way to calibrate inference compute budgets for target performance levels, leaving potential efficiency gains unexplored.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+  </div>
+</section>
+
+<!-- Method Section -->
+<section class="section has-background-light" id="method">
+  <div class="container">
+    <h2 class="title is-2 has-text-centered mb-6">Our Solution: Length Controlled Policy Optimization (LCPO)</h2>
+    
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <div class="content has-text-centered">
+          <p class="is-size-5 mb-5">
+            We propose <strong>Length Controlled Policy Optimization (LCPO)</strong>, a simple reinforcement learning method that gives reasoning language models adaptive control over the length using just a prompt.
+          </p>
+        </div>
+        
+        <div class="box">
+          <div class="columns is-vcentered">
+            <div class="column is-5">
+              <h3 class="title is-4">Two Variants</h3>
+              <div class="tabs is-boxed">
+                <ul>
+                  <li class="is-active" data-tab="exact-tab">
+                    <a>
+                      <span class="icon"><i class="fas fa-ruler"></i></span>
+                      <span>LCPO-Exact</span>
+                    </a>
+                  </li>
+                  <li data-tab="max-tab">
+                    <a>
+                      <span class="icon"><i class="fas fa-compress-arrows-alt"></i></span>
+                      <span>LCPO-Max</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              
+              <div id="exact-tab" class="tab-content is-active">
+                <div class="notification is-primary is-light">
+                  <p><strong>LCPO-Exact</strong>: Requires the generated reasoning to be <strong>exactly equal</strong> to the target length.</p>
+                  <p class="mt-3"><strong>Example prompt:</strong> "Think for exactly 512 tokens."</p>
+                  <p class="mt-3"><strong>Use case:</strong> When precise control is needed for benchmarking or exact token budgeting.</p>
+                </div>
+              </div>
+              
+              <div id="max-tab" class="tab-content">
+                <div class="notification is-success is-light">
+                  <p><strong>LCPO-Max</strong>: Requires output to be <strong>no longer than</strong> the target length, allowing flexibility while respecting upper bounds.</p>
+                  <p class="mt-3"><strong>Example prompt:</strong> "Think for maximum 1024 tokens."</p>
+                  <p class="mt-3"><strong>Use case:</strong> When limiting maximum computation while allowing flexibility for problem difficulty.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="column is-7">
+              <h3 class="title is-4 mb-4">How It Works</h3>
+              
+              <!-- LCPO-Exact content - visible by default -->
+              <div id="exact-steps" class="method-steps is-active">
+              <div class="method-step">
+                <h5 class="title is-5">1. Problem Formulation</h5>
+                <p>
+                  Given an input prompt <strong>x</strong> and a target length <strong>n_gold</strong>, generate a response whose length <strong>n_y</strong> minimizes <strong>|n_gold - n_y|</strong> while producing the correct answer.
+                </p>
+              </div>
+              
+              <div class="method-step">
+                <h5 class="title is-5">2. Prompt Augmentation</h5>
+                <div class="columns is-vcentered">
+                  <div class="column">
+                    <p>Each prompt is augmented with a target length instruction:</p>
+                      <p><code>x_new = Concat(x, "Think for exactly n_gold tokens.")</code></p>
+                  </div>
+                  <div class="column is-narrow">
+                    <div class="box has-background-light has-text-centered">
+                      <i class="fas fa-plus fa-2x"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="method-step">
+                <h5 class="title is-5">3. Reinforcement Learning</h5>
+                <p>We optimize using a reward function that balances accuracy and length adherence:</p>
+                <div class="has-text-centered">
+                  <p class="is-family-monospace p-3 has-background-light is-inline-block">
+                    r(y, y_gold, n_gold) = I(y = y_gold) - α · |n_gold - n_y|
+                  </p>
+                  <p class="mt-2">
+                    <span class="tag is-info">α</span> balances correctness vs. length matching
+                  </p>
+                </div>
+              </div>
+            </div>
+              
+              <!-- LCPO-Max content - hidden by default -->
+              <div id="max-steps" class="method-steps" style="display: none;">
+                <div class="method-step">
+                  <h5 class="title is-5">1. Problem Formulation</h5>
+                  <p>
+                    Given an input prompt <strong>x</strong> and a maximum length <strong>n_gold</strong>, generate a response whose length <strong>n_y</strong> is <strong>no longer than n_gold</strong> while producing the correct answer, using as few tokens as necessary.
+                  </p>
+          </div>
+                
+                <div class="method-step">
+                  <h5 class="title is-5">2. Prompt Augmentation</h5>
+                  <div class="columns is-vcentered">
+                    <div class="column">
+                      <p>Each prompt is augmented with a maximum length instruction:</p>
+                      <p><code>x_new = Concat(x, "Think for maximum n_gold tokens.")</code></p>
+                    </div>
+                    <div class="column is-narrow">
+                      <div class="box has-background-light has-text-centered">
+                        <i class="fas fa-plus fa-2x"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="method-step">
+                  <h5 class="title is-5">3. Reinforcement Learning</h5>
+                  <p>We optimize using a modified reward function with soft constraints:</p>
+                  <div class="has-text-centered">
+                    <p class="is-family-monospace p-3 has-background-light is-inline-block">
+                      r(y, y_gold, n_gold) = I(y = y_gold) · clip(α · (n_gold - n_y) + δ, 0, 1)
+                    </p>
+                    <p class="mt-2">
+                      <span class="tag is-info">δ</span> ensures correct answers with minor budget violations are preferred over incorrect answers
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results Section -->
+<section class="section" id="results">
+  <div class="container">
+    <h2 class="title is-2 has-text-centered mb-6">Key Results</h2>
+    
+    <div class="columns is-multiline is-centered">
+      <div class="column is-3">
+        <div class="result-metric">
+          <p><i class="fas fa-arrow-up fa-2x mb-3" style="color: var(--primary);"></i></p>
+          <p class="result-value-small">Upto 2x</p>
+          <p>Performance improvement per token over S1 method</p>
+        </div>
+      </div>
+      
+      <div class="column is-3">
+        <div class="result-metric">
+          <p><i class="fas fa-bullseye fa-2x mb-3" style="color: var(--danger);"></i></p>
+          <p class="result-value">~3%</p>
+          <p>Mean length deviation on math reasoning tasks</p>
+        </div>
+      </div>
+      
+      <div class="column is-3">
+        <div class="result-metric">
+          <p><i class="fas fa-check-double fa-2x mb-3" style="color: var(--warning);"></i></p>
+          <p class="result-value-small">+2%</p>
+          <p>Our 1.5B model outperforms GPT-4o at <strong>equal reasoning lengths</strong></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="columns is-centered mt-6">
+      <div class="column is-10">
+        <div class="box">
+          <h3 class="title is-4 has-text-centered mb-4">Performance Across Token Budgets</h3>
+          
+          <!-- Chart controls for dataset selection -->
+          <div class="chart-controls mb-4">
+            <button class="chart-control-btn active" data-dataset="average">AVERAGE</button>
+            <button class="chart-control-btn" data-dataset="aime">AIME</button>
+            <button class="chart-control-btn" data-dataset="math">MATH</button>
+            <button class="chart-control-btn" data-dataset="amc">AMC</button>
+            <button class="chart-control-btn" data-dataset="olympiad_bench">OLYMPIAD-BENCH</button>
+          </div>
+          
+          <!-- Static chart with legend in columns -->
+          <div class="columns">
+            <!-- Static chart image - 75% width -->
+            <div class="column is-9">
+              <div class="has-text-centered">
+                <img id="dataset-chart" src="static/images/main_results.png" alt="Performance across token budgets" style="max-width: 100%; margin: 0 auto;">
+              </div>
+            </div>
+            
+            <!-- Legend - 25% width -->
+            <div class="column is-3">
+              <div class="box has-background-light" style="height: 100%;">
+                <h5 class="title is-5 has-text-centered mb-3">Our Methods:</h5>
+                <div>
+                  <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: #E74C3C; margin-right: 10px;"></span>
+                    <span>L1-Exact</span>
+                  </div>
+                  <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color: #F39C12; margin-right: 10px;"></span>
+                    <span>L1-Max</span>
+                  </div>
+                </div>
+                
+                <h5 class="title is-5 has-text-centered mb-3">Baselines:</h5>
+                <div>
+                  <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="display: inline-block; width: 15px; height: 15px; font-size: 15px; color: #9B59B6; margin-right: 10px;">★</span>
+                    <span>S1 (Budget Forcing)</span>
+                  </div>
+                  <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="display: inline-block; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-bottom: 14px solid #3498DB; margin-right: 10px;"></span>
+                    <span>Agentica-4K</span>
+                  </div>
+                  <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="display: inline-block; width: 14px; height: 14px; background-color: #2ECC71; margin-right: 10px;"></span>
+                    <span>Agentica-24K</span>
+                  </div>
+                  <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="display: inline-block; width: 14px; height: 14px; transform: rotate(45deg); background-color: #F39C12; margin-right: 10px;"></span>
+                    <span>DeepSeek-R1-1.5B</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="notification is-info is-light mt-3">
+            <p class="has-text-centered">
+              <strong>L1 significantly outperforms S1 method by up to 100% relative and 20% absolute across all token budgets.</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+  </div>
+</section>
+
+<!-- Interactive Comparison Section -->
+<section class="section has-background-light" id="interactive">
+  <div class="container">
+    <h2 class="title is-2 has-text-centered mb-6">Interactive Model Comparison</h2>
+    
+    <div class="columns is-centered">
+      <div class="column is-10">
+        <div class="box">
+          <h3 class="title is-4 has-text-centered mb-4">Compare Model Performance</h3>
+          
+          <div class="selector-container">
+            <div class="columns is-multiline">
+              <!-- Dataset Selector -->
+              <div class="column is-4">
+                <div class="field">
+                  <label class="label">Dataset</label>
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select id="dataset-selector">
+                        <option value="aime" selected>AIME</option>
+                        <option value="math">MATH</option>
+                        <option value="amc">AMC</option>
+                        <option value="olympiad_bench">OLYMPIAD-BENCH</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Load Button -->
+              <div class="column is-4 is-offset-4">
+                <div class="field">
+                  <label class="label">&nbsp;</label>
+                  <div class="control">
+                    <button id="load-random-btn" class="button is-primary is-fullwidth">
+                      <span class="icon">
+                        <i class="fas fa-random"></i>
+                      </span>
+                      <span>Load Example</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Loader -->
+          <div class="loader" id="loader"></div>
+          
+          <!-- Problem Display -->
+          <div class="problem-display is-hidden" id="problem-container">
+            <h3 class="title is-5" id="problem-title">Problem</h3>
+            <div class="content" id="problem-text">
+              Select a dataset and click "Load Random Example" to see a problem.
+            </div>
+            <div class="content mt-3" id="correct-answer-container">
+              <strong>Correct Answer:</strong> <span id="correct-answer">Select a problem to see the answer</span>
+            </div>
+          </div>
+          
+          <!-- Comparison Display -->
+          <div class="comparison-container is-hidden" id="comparison-container">
+            <div class="comparison-header">
+              <h3 class="title is-5">Model Comparison</h3>
+              <div>
+                <span class="tag is-primary" id="problem-id">Example #123</span>
+              </div>
+            </div>
+            
+            <div class="comparison-body">
+              <!-- First Model Response -->
+              <div class="comparison-column" id="response1-column">
+                <div class="selector-row columns is-mobile mb-3">
+                  <!-- First Model Selection -->
+                  <div class="column is-6">
+                    <div class="field">
+                      <label class="label is-small">Model 1</label>
+                      <div class="control">
+                        <div class="select is-small is-fullwidth">
+                          <select id="model1-selector">
+                            <option value="L1-Exact">L1-Exact</option>
+                            <option value="L1-Max">L1-Max</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- First Token Length Selection -->
+                  <div class="column is-6">
+                    <div class="field">
+                      <label class="label is-small">Token Length</label>
+                      <div class="control">
+                        <div class="select is-small is-fullwidth">
+                          <select id="token1-selector">
+                            <option value="512">512 tokens</option>
+                            <option value="1024">1024 tokens</option>
+                            <option value="2048">2048 tokens</option>
+                            <option value="3600">3600 tokens</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="response-meta">
+                  <h5 class="subtitle is-6" id="model1-title">L1-Exact (512 tokens)</h5>
+                  <span id="model1-correct" class="is-hidden correct-tag">
+                    <i class="fas fa-check"></i> Correct
+                  </span>
+                  <span id="model1-incorrect" class="is-hidden incorrect-tag">
+                    <i class="fas fa-times"></i> Incorrect
+                  </span>
+                </div>
+                <div class="reasoning-sample" id="response1-text">
+                  Select options and load a random example to see the model response.
+                </div>
+                <p class="token-counter" id="token1-counter">0 tokens</p>
+              </div>
+              
+              <!-- Second Model Response -->
+              <div class="comparison-column" id="response2-column">
+                <div class="selector-row columns is-mobile mb-3">
+                  <!-- Second Model Selection -->
+                  <div class="column is-6">
+                    <div class="field">
+                      <label class="label is-small">Model 2</label>
+                      <div class="control">
+                        <div class="select is-small is-fullwidth">
+                          <select id="model2-selector">
+                            <option value="L1-Exact">L1-Exact</option>
+                            <option value="L1-Max" selected>L1-Max</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Second Token Length Selection -->
+                  <div class="column is-6">
+                    <div class="field">
+                      <label class="label is-small">Token Length</label>
+                      <div class="control">
+                        <div class="select is-small is-fullwidth">
+                          <select id="token2-selector">
+                            <option value="512">512 tokens</option>
+                            <option value="1024">1024 tokens</option>
+                            <option value="2048">2048 tokens</option>
+                            <option value="3600" selected>3600 tokens</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="response-meta">
+                  <h5 class="subtitle is-6" id="model2-title">L1-Max (3600 tokens)</h5>
+                  <span id="model2-correct" class="is-hidden correct-tag">
+                    <i class="fas fa-check"></i> Correct
+                  </span>
+                  <span id="model2-incorrect" class="is-hidden incorrect-tag">
+                    <i class="fas fa-times"></i> Incorrect
+                  </span>
+                </div>
+                <div class="reasoning-sample" id="response2-text">
+                  Select options and load a random example to see the model response.
+                </div>
+                <p class="token-counter" id="token2-counter">0 tokens</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="notification is-primary is-light mt-4">
+            <p class="has-text-centered">
+              <strong>Compare how L1 models perform with different token constraints and control strategies.</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Key Findings Section -->
+<section class="section" id="findings">
+  <div class="container">
+    <h2 class="title is-2 has-text-centered mb-6">Surprising Findings</h2>
+    
+          <div class="columns">
+      <div class="column is-6">
+        <div class="box" style="height: 100%;">
+          <h3 class="title is-4 has-text-centered mb-4">Long CoT Models are Secretly Strong Short CoT Models</h3>
+          
+          <div class="example-box">
+            <div class="columns is-vcentered">
+              <div class="column is-narrow">
+                <span class="icon is-large has-text-primary">
+                  <i class="fas fa-lightbulb fa-2x"></i>
+                </span>
+              </div>
+              <div class="column">
+                <p class="has-text-weight-bold">Key Insight:</p>
+                <p>Our L1-1.5B model trained with LCPO outperforms its original counterparts by significant margins (up to 10% improvement) and even matches GPT-4o despite using the same token budget.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="comparison-container mt-4">
+            <h5 class="title is-5 has-text-centered mb-3">Model Performance Comparison</h5>
+            <div style="height: 350px; position: relative;">
+              <canvas id="modelComparisonChart"></canvas>
+            </div>
+            <p class="has-text-centered is-size-5 mt-2">Each pair of model uses the <b>same generation length</b></p>
+            <p class="has-text-centered is-size-7 mt-2">Hover over bars to see exact accuracy and token count</p>
+
+          </div>
+          
+          <div class="notification is-success is-light mt-4">
+            <p class="has-text-centered">
+              <strong>First demonstration that a 1.5B model can match the performance of GPT-4o, despite using the same generation length.</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="column is-6">
+        <div class="box" style="height: 100%;">
+          <h3 class="title is-4 has-text-centered mb-4">Generalizes to Out-of-Distribution Tasks</h3>
+          
+          <div class="example-box">
+            <div class="columns is-vcentered">
+              <div class="column is-narrow">
+                <span class="icon is-large has-text-warning">
+                  <i class="fas fa-brain fa-2x"></i>
+                </span>
+              </div>
+              <div class="column">
+                <p class="has-text-weight-bold">Key Insight:</p>
+                <p>L1's length control capabilities generalize to domains outside its training distribution, including logical reasoning (GPQA, LSAT) and general knowledge (MMLU).</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="comparison-container mt-4">
+            <h5 class="title is-5 has-text-centered mb-3">OOD Task Performance</h5>
+            <div class="has-text-centered">
+              <img src="static/images/ood_results.png" alt="Out-of-domain task performance" style="max-width: 100%; margin: 0 auto;">
+            </div>
+            <p class="has-text-centered is-size-7 mt-2">Performance scales positively with token budget even on OOD tasks</p>
+          </div>
+          
+          <div class="notification is-warning is-light mt-4">
+            <p class="has-text-centered">
+              <strong>L1's length control can generalize to new domains, matching base model performance at comparable token budgets.</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="findings">
+  <div class="columns is-centered mt-5">
+    <div class="column is-10">
+    </div>
+  </div>
+</section>
+
+<!-- Citation Section -->
+<section class="section has-background-light">
+  <div class="container">
+    <h2 class="title is-2 has-text-centered mb-6">Citation</h2>
+    
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="box" style="position: relative;">
+          <pre style="background-color: #f5f5f5; padding: 2rem; border-radius: 8px; overflow-x: auto; font-size: 0.9rem;">@misc{aggarwal2025l1controllinglongreasoning,
+            title={L1: Controlling How Long A Reasoning Model Thinks With Reinforcement Learning}, 
+            author={Pranjal Aggarwal and Sean Welleck},
+            year={2025},
+            eprint={2503.04697},
+            archivePrefix={arXiv},
+            primaryClass={cs.CL},
+            url={https://arxiv.org/abs/2503.04697}, 
+      }</pre>
+            <button id="copy-citation" class="button is-small is-dark is-rounded" style="position: absolute; top: 10px; right: 10px;">
+              <span class="icon is-small">
+                <i class="fas fa-copy"></i>
+              </span>
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-4">
+        <!-- L1: Controlling How Long A Reasoning Model Thinks With Reinforcement Learning -->
+        <h4 class="title is-5">L1: Controlling How Long A Reasoning Model Thinks</h4>
+        <p>with Reinforcement Learning</p>
+      </div>
+      
+      <div class="column is-4 has-text-centered">
+        <p>
+          <a href="https://github.com/cmu-l3/L1" class="button is-small is-dark is-rounded">
+            <span class="icon"><i class="fab fa-github"></i></span>
+            <span>GitHub</span>
+          </a>
+          <a href="https://arxiv.org/abs/2503.04697" class="button is-small is-dark is-rounded">
+            <span class="icon"><i class="ai ai-arxiv"></i></span>
+            <span>Paper</span>
+          </a>
+        </p>
+      </div>
+      
+      <div class="column is-4 has-text-right">
+        <!-- <p>Carnegie Mellon University</p> -->
+        <p>2025</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+

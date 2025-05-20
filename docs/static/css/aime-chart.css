@@ -1,0 +1,41 @@
+/* AIME Drop Chart Styling */
+.aime-chart-container {
+  position: relative;
+  height: 300px;
+  margin: 20px 0;
+}
+
+.aime-chart-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.aime-chart-subtitle {
+  font-size: 0.9rem;
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Bar color classes */
+.bar-b1 {
+  background-color: rgba(39, 174, 96, 0.6);
+  border: 1px solid rgba(39, 174, 96, 1);
+}
+
+.bar-agentica {
+  background-color: rgba(231, 76, 60, 0.6);
+  border: 1px solid rgba(231, 76, 60, 1);
+}
+
+.bar-deepseek {
+  background-color: rgba(243, 156, 18, 0.6);
+  border: 1px solid rgba(243, 156, 18, 1);
+}
+
+.bar-llama {
+  background-color: rgba(231, 76, 60, 0.6);
+  border: 1px solid rgba(231, 76, 60, 1);
+} 

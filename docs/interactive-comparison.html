@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="B1: Length Controlled Policy Optimization - Interactive Comparison">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>B1: Interactive Model Comparison</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600|Roboto:400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Load stylesheets -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  
+  <style>
+    :root {
+      --primary: #4A90E2;
+      --secondary: #50E3C2;
+      --accent: #FF5A5F;
+      --dark: #2C3E50;
+      --light: #F8F9FA;
+      --success: #27AE60;
+      --warning: #F39C12;
+      --danger: #E74C3C;
+      --gradient-start: #4A90E2;
+      --gradient-end: #50E3C2;
+    }
+    
+    body {
+      font-family: 'Open Sans', sans-serif;
+      scroll-behavior: smooth;
+    }
+    
+    .hero {
+      background: white;
+      color: var(--dark);
+    }
+    
+    .title, .subtitle {
+      font-family: 'Roboto', sans-serif;
+    }
+    
+    .comparison-container {
+      background-color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+    
+    .comparison-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .comparison-body {
+      display: flex;
+      min-height: 300px;
+    }
+    
+    .comparison-column {
+      flex: 1;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    
+    .comparison-column.correct {
+      background-color: rgba(39, 174, 96, 0.1);
+    }
+    
+    .comparison-column.incorrect {
+      background-color: rgba(231, 76, 60, 0.1);
+    }
+    
+    .token-counter {
+      font-size: 0.9rem;
+      text-align: right;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+    
+    .reasoning-sample {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.9rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.7);
+      height: 100%;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+    
+    .correct-tag {
+      color: var(--success);
+      font-weight: bold;
+    }
+    
+    .incorrect-tag {
+      color: var(--danger);
+      font-weight: bold;
+    }
+    
+    .response-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .selector-container {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+    
+    .problem-display {
+      background-color: var(--light);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .loader {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--primary);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 2rem auto;
+      display: none;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .is-hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="index.html">
+        B1
+      </a>
+    </div>
+    
+    <div class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="index.html">Back to Main Page</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title is-2 has-text-centered">Interactive Model Comparison</h1>
+      <h2 class="subtitle is-4 has-text-centered">Compare responses between different models and token lengths</h2>
+    </div>
+  </div>
+</section>
+
+<!-- Interactive Comparison Section -->
+<section class="section">
+  <div class="container">
+    <div class="selector-container">
+      <div class="columns is-multiline">
+        <!-- Dataset Selector -->
+        <div class="column is-4">
+          <div class="field">
+            <label class="label">Dataset</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="dataset-selector">
+                  <option value="aime">AIME</option>
+                  <option value="math">MATH</option>
+                  <option value="amc">AMC</option>
+                  <option value="olympiad">OLYMPIAD-BENCH</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- First Model Selection -->
+        <div class="column is-4">
+          <div class="field">
+            <label class="label">Model 1</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="model1-selector">
+                  <option value="LCPO-Exact">LCPO-Exact</option>
+                  <option value="LCPO-Max">LCPO-Max</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- First Token Length Selection -->
+        <div class="column is-4">
+          <div class="field">
+            <label class="label">Token Length 1</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="token1-selector">
+                  <option value="512">512 tokens</option>
+                  <option value="1024">1024 tokens</option>
+                  <option value="2048">2048 tokens</option>
+                  <option value="3600">3600 tokens</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Second Model Selection -->
+        <div class="column is-4">
+          <div class="field">
+            <label class="label">Model 2</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="model2-selector">
+                  <option value="LCPO-Exact">LCPO-Exact</option>
+                  <option value="LCPO-Max" selected>LCPO-Max</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Second Token Length Selection -->
+        <div class="column is-4">
+          <div class="field">
+            <label class="label">Token Length 2</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select id="token2-selector">
+                  <option value="512">512 tokens</option>
+                  <option value="1024" selected>1024 tokens</option>
+                  <option value="2048">2048 tokens</option>
+                  <option value="3600">3600 tokens</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Load Button -->
+        <div class="column is-4">
+          <div class="field">
+            <label class="label">&nbsp;</label>
+            <div class="control">
+              <button id="load-random-btn" class="button is-primary is-fullwidth">
+                <span class="icon">
+                  <i class="fas fa-random"></i>
+                </span>
+                <span>Load Random Example</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Loader -->
+    <div class="loader" id="loader"></div>
+    
+    <!-- Problem Display -->
+    <div class="problem-display is-hidden" id="problem-container">
+      <h3 class="title is-5" id="problem-title">Problem</h3>
+      <div class="content" id="problem-text">
+        Select a dataset and click "Load Random Example" to see a problem.
+      </div>
+    </div>
+    
+    <!-- Comparison Display -->
+    <div class="comparison-container is-hidden" id="comparison-container">
+      <div class="comparison-header">
+        <h3 class="title is-5">Model Comparison</h3>
+        <div>
+          <span class="tag is-primary" id="problem-id">Example #123</span>
+        </div>
+      </div>
+      
+      <div class="comparison-body">
+        <!-- First Model Response -->
+        <div class="comparison-column" id="response1-column">
+          <div class="response-meta">
+            <h5 class="subtitle is-6" id="model1-title">LCPO-Exact (512 tokens)</h5>
+            <span id="model1-correct" class="is-hidden correct-tag">
+              <i class="fas fa-check"></i> Correct
+            </span>
+            <span id="model1-incorrect" class="is-hidden incorrect-tag">
+              <i class="fas fa-times"></i> Incorrect
+            </span>
+          </div>
+          <div class="reasoning-sample" id="response1-text">
+            Select options and load a random example to see the model response.
+          </div>
+          <p class="token-counter" id="token1-counter">0 tokens</p>
+        </div>
+        
+        <!-- Second Model Response -->
+        <div class="comparison-column" id="response2-column">
+          <div class="response-meta">
+            <h5 class="subtitle is-6" id="model2-title">LCPO-Max (1024 tokens)</h5>
+            <span id="model2-correct" class="is-hidden correct-tag">
+              <i class="fas fa-check"></i> Correct
+            </span>
+            <span id="model2-incorrect" class="is-hidden incorrect-tag">
+              <i class="fas fa-times"></i> Incorrect
+            </span>
+          </div>
+          <div class="reasoning-sample" id="response2-text">
+            Select options and load a random example to see the model response.
+          </div>
+          <p class="token-counter" id="token2-counter">0 tokens</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        <strong>B1: Length Controlled Policy Optimization</strong> for Reasoning Language Models
+      </p>
+      <p>
+        <a href="index.html" class="button is-small is-dark is-rounded">
+          <span class="icon"><i class="fas fa-home"></i></span>
+          <span>Back to Main Page</span>
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- JavaScript for interactive comparison -->
+<script src="static/js/interactive-comparison.js"></script>
+
+</body>
+</html> 

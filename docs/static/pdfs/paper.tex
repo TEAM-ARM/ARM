@@ -1,0 +1,198 @@
+\begin{abstract}
+  Reasoning language models have shown an uncanny ability to improve performance at test-time by ``thinking longer''—that is, by generating longer chain-of-thought sequences and hence using more compute.
+However, the length of their chain-of-thought reasoning is not controllable, making it impossible to allocate test-time compute to achieve a desired level of performance.
+We introduce 
+Length Controlled Policy Optimization (\ours{}),  a simple reinforcement learning method that optimizes for accuracy and adherence to user-specified length constraints.
+We use \ours{} to train \model{}, a reasoning language model that produces outputs satisfying a length constraint given in its prompt.
+\model{}'s length control allows for smoothly trading off computational cost and accuracy on a wide range of tasks, and outperforms the state-of-the-art S1 method for length control.
+Furthermore, we uncover an unexpected short chain-of-thought capability in models trained with \ours{}. For instance, our 1.5B \model{} model surpasses GPT-4o at equal reasoning lengths.
+Overall, \ours{} enables precise control over reasoning length, allowing for fine-grained allocation of test-time compute and accuracy.\footnote{Code and models released at \url{https://cmu-l3.github.io/l1}}
+\end{abstract}
+
+\section{Introduction}
+
+\input{figures/teaser_figure}
+An emerging class of \textit{reasoning language models}~\citep{openai2024openaio1card,deepseekai2025deepseekr1incentivizingreasoningcapability} improve performance at test-time by thinking longer when solving complex problems—that is,  by generating extended chain-of-thought~\citep{wei2023chainofthoughtpromptingelicitsreasoning} sequences and in turn using more compute.
+However, current reasoning models have a key limitation: the length of their reasoning is uncontrolled, making it impossible to allocate a test-time compute budget to achieve a target performance level.
+In some cases, sequences span tens of thousands of tokens, wasting compute, while in others, models stop too early on complex problems.
+
+
+Recent methods like S1~\citep{muennighoff2025s1simpletesttimescaling} attempt to achieve length control by forcing a model to generate special tokens (e.g., ``Wait'', ``Final Answer'') when the generation is too short or too long.
+However, this rigid, hand-engineered strategy severely degrades  performance compared to the underlying model (Figure~\ref{fig:teaser_figure}).
+Other work investigates controlling output lengths in instruction following and general domains~\citep{butcher2024preciselengthcontrollarge,yuan2024followinglengthconstraintsinstructions}. 
+However, reasoning models face  fundamentally new challenges such as much longer output lengths and the need to trade off computational cost for improved performance.
+
+
+We propose \textbf{Length Controlled Policy Optimization (\ours{})}, a simple reinforcement learning (RL)-based method that gives reasoning language models precise and adaptive length control.
+\ours{} 
+trains models to satisfy two objectives:
+(1) correctness of the final output, and (2) generating reasoning sequences that meet a length constraint specified in the prompt.
+In doing so, \ours{}-trained models \textit{learn} to satisfy length constraints while optimizing reasoning performance rather than relying on hand-engineered heuristics.
+
+We experiment with two practical constraints: (1) \ours{}-Exact, which requires the generated reasoning to be exactly equal to the target length, and (2) \ours{}-Max, which requires the output to be no longer than the target length.
+We use \ours{} to fine-tune a 1.5B-parameter reasoning model based on Qwen-Distilled-R1-1.5B~\citep{deepseekai2025deepseekr1incentivizingreasoningcapability, qwen2025qwen25technicalreport}, producing \model{}-Max and \model{}-Exact.
+Our \model{} models can precisely trade off token budget and reasoning performance, smoothly interpolating between short, efficient reasoning and longer, more accurate reasoning by simply prompting the model with different length constraints (Figure~\ref{fig:teaser_figure}). Crucially, one point on this trade-off curve recovers the original base model's performance, while outperforming S1~\citep{muennighoff2025s1simpletesttimescaling} in performance across the entire range of reasoning lengths (Figure~\ref{fig:teaser_figure}). On math reasoning tasks, \model{} outperforms S1 by up to 100\% relative and 20\% absolute, under identical conditions.
+
+Beyond improved length control in the standard math reasoning setting, we find that \ours{}-trained models generalize surprisingly well to out-of-distribution tasks, including logical reasoning, and general-knowledge benchmarks like MMLU~\citep{hendrycks2021measuringmassivemultitasklanguage}.
+Furthermore, we show that ``long-CoT'' models trained with \ours{} become unexpectedly strong ``short-CoT'' models: when prompted to generate short reasoning traces, \ours{}-trained models outperform their original counterparts by significant margins (up to 10\% improvement), even at the same generation length. To the best of our knowledge, for the first time we show that a 1.5B model can match the performance of GPT-4o~\citep{openai2024gpt4technicalreport} despite using the same token budget.
+% 
+In summary, our contributions are:
+
+\begin{itemize}
+  \item We introduce Length Controlled Policy Optimization (\ours{}), the first reinforcement learning-based method for training reasoning language models that produce outputs adhering to user-specified length constraints.
+  \item We use \ours{} to train \model{}, which demonstrates high degree of length control and achieves state-of-the-art reasoning accuracy at fixed token budgets on challenging math reasoning benchmarks.
+  \item We show length-control of \model{} generalizes beyond math reasoning tasks to diverse out-of-distribution tasks, including logical reasoning, and general-domain benchmarks (MMLU).
+  \item We demonstrate that \ours{}-trained models can act as strong short-CoT models, significantly outperforming their non-reasoning counterparts and much larger models such as GPT-4o, despite using the same token budget.
+\end{itemize}
+
+\section{Related Work}
+\label{sec:related-work}
+
+\paragraph{Test-Time Scaling in Large Language Models.}
+
+Increasing test-time computation has consistently been shown to improve performance in complex reasoning tasks, mathematical problem-solving, and code generation~\citep{wu2024inferencescalinglawsempirical, wang2023selfconsistencyimproveschainthought, wei2023chainofthoughtpromptingelicitsreasoning, deepseekai2025deepseekr1incentivizingreasoningcapability, snell2024scalingllmtesttimecompute}. 
+Test-time scaling laws indicate predictable performance gains from increasing inference computation, either by generating more reasoning chains or longer ones~\citep{wu2024inferencescalinglawsempirical, snell2024scalingllmtesttimecompute,openai2024openaio1card}.
+Prominent approaches include parallel sampling of multiple reasoning paths~\citep{wang2023selfconsistencyimproveschainthought,aggarwal2023letssamplestepstep}, tree-based search~\citep{yao2023treethoughtsdeliberateproblem,wu2024inferencescalinglawsempirical,xin2024deepseekproverv15harnessingproofassistant}, and iterative refinement techniques~\citep{welleck2023generating,madaan2023selfrefineiterativerefinementselffeedback,snell2024scalingllmtesttimecompute,welleck2024decodingmetagenerationinferencetimealgorithms}.  
+Recent reasoning language models such as ``O1'' and ``R1''-style models~\citep{openai2024openaio1card, deepseekai2025deepseekr1incentivizingreasoningcapability} simplify test-time scaling by generating extended reasoning traces (longer chains-of-thought).   
+Despite their promising results, these methods lack precise and dynamic control over the length of the generated reasoning chains, resulting in often suboptimal performance or unrealized potential efficiency gains.
+Our work complements and extends this line of research by enabling reasoning models to precisely control the length of generated outputs, thereby providing flexibility to calibrate inference compute based on task-specific requirements.
+
+\paragraph{Length Control in Large Language Models.}
+
+Controlling the length of LLM-generated outputs is an important practical consideration across various generation tasks. Approaches proposed thus far include architectural modifications—such as manipulating positional encodings for exact sequence-length generation~\citep{butcher2024preciselengthcontrollarge}—training objective adjustments to explicitly enforce length constraints~\citep{jie2023prompt,singhal2024longwaygoinvestigating}, or directly training models on instruction-style data explicitly labeled with desired output lengths~\citep{yuan2024followinglengthconstraintsinstructions}.  
+Previous works on length control largely fall into two use-case categories. The first aims primarily to reduce unnecessary verbosity (as often desired in RLHF-tuned instruction-following models) while the second aims either to impose maximum length budgets or achieve precise token-level length adherence~\citep{jie2023prompt,yuan2024followinglengthconstraintsinstructions,singhal2024longwaygoinvestigating}.  
+However, existing methods predominantly focus on general-purpose text generation or instruction-following contexts, where cost-quality efficiency trade-offs are less critical or remain unaddressed~\citep{jie2023prompt,yuan2024followinglengthconstraintsinstructions,butcher2024preciselengthcontrollarge}. 
+Our work addresses the new challenges present in reasoning models.
+
+Length control specifically tailored to reasoning tasks remains relatively unexplored. Recent works, such as those by \citet{arora2025traininglanguagemodelsreason} and \citet{kang2024c3otgeneratingshorterchainofthought}, emphasize generating shorter reasoning chains for efficiency, but they do not enable explicit length control or precise alignment with user-specified inference budgets. Another work S1~\citep{muennighoff2025s1simpletesttimescaling} introduces ``budget-forcing'' by imposing a strict token limit: either truncating output at budget exhaustion or inserting a special token (``Wait'') to request continued generation until reaching the full length budget. Unfortunately, this strategy presents significant practical drawbacks. Abrupt truncation often interrupts reasoning mid-step, negatively impacting model accuracy and user interpretability. Meanwhile, the repetitive usage of special continuation tokens risks rigid and suboptimal reasoning patterns.  
+
+In contrast to these prior works, our \ours{} is uniquely designed to train reasoning-specialized models for precise and adaptive length control. \ours{} uses reinforcement learning so that models \textit{learn} to dynamically allocate inference compute based on constraints provided in a prompt.
+As our experiments will demonstrate, our method substantially surpasses previous approaches in precision over length control, and performance at varying length budgets.
+
+\section{Method}
+\label{sec:method}
+
+Current reasoning language models lack an explicit mechanism for controlling the length of their generated reasoning traces. This limitation prevents users and downstream applications from explicitly calibrating the inference compute budget (number of generated tokens) according to task-specific requirements or available computational resources.
+
+In this work, we address this limitation by conditioning the model on a target token length provided in the prompt. Formally, given an input prompt $x$ and a target length $n_{gold}$, the model is expected to generate a response $y$ whose length $n_y$ minimizes the absolute difference $|n_{gold} - n_y|$ while simultaneously producing the correct answer. This formulation directly couples accuracy with output length, ensuring that the generated chain-of-thoughts adhere to user-specified constraints.
+
+
+\paragraph{Length Controlled Policy Optimization.}
+We begin with a pre-trained reasoning language model $LLM_{\theta}$ and a dataset $D = \{(x_i, y_{gold,i})\}_{i=1}^N$, where each instance contains only the input prompt and the final answer (i.e., no intermediate reasoning traces). To enable length control, each prompt $x_i$ is augmented by appending a target length instruction. In particular, we form
+\[
+x_i^{new} = \text{Concat}\Bigl(x_i,\, \text{``Think for } n_{gold,i} \text{ tokens.''}\Bigr),
+\]
+where $n_{gold,i}$ is sampled uniformly from $\mathbb{Z}(n_{min}, n_{max})$. This augmentation yields a new dataset $D^{new} = \{(x_i^{new}, y_{gold,i})\}_{i=1}^N$.
+
+We then update $LLM_{\theta}$ using a reinforcement learning objective. In our experiments we adopt GRPO~\citep{shao2024deepseekmathpushinglimitsmathematical} (though the method is compatible with other RL algorithms). Our reward function combines two terms: a correctness reward $r_c$ and a length penalty $r_{length}$. It is defined as
+\begin{equation}
+r(y, y_{gold}, n_{gold}) = \mathbb{I}(y = y_{gold}) - \alpha \cdot \bigl|n_{gold} - n_y\bigr|,
+\label{eq:reward_function}
+\end{equation}
+where $\mathbb{I}(\cdot)$ is the indicator function, $n_y$ is the generated output length, and $\alpha$ is a scalar that regulates the trade-off between generating the correct answer and meeting the target length. In practice, a lower value of $\alpha$ prioritizes correctness when it is critical, whereas a higher value enforces stricter adherence to the length constraint. Notably, the reward function serves a dual purpose: (a) it encourages the model to produce correct answers while implicitly favoring concise reasoning traces when shorter outputs are requested, and (b) it consistently motivates the model to match the prescribed target length even when a correct answer could be generated with fewer tokens. We refer to the model trained with this objective as \model{}-Exact.
+
+At inference, the output length is controlled by selecting a fixed target length $n_{gold}$ (or a set of lengths) that is appended uniformly to every test prompt.
+
+\paragraph{Maximum Length Constraint Mode.}
+
+We further train a variant of \model{} called \model{}-Max, which flexibly generates outputs of varying lengths while respecting a maximum length constraint. This approach is valuable when users prioritize staying within a computational budget rather than adhering to exact generation lengths. To train \model{}-Max, we fine-tune the \model{}-Exact model using the same RL framework but with a modified reward function:
+\begin{equation}
+r(y, y_{gold}, n_{gold}) = \mathbb{I}(y = y_{gold}) \cdot \text{clip}(\alpha \cdot (n_{gold} - n_y) + \delta, 0, 1),
+\label{eq:reward_function_max_length}
+\end{equation}
+where $\alpha$ controls the penalty for length violations. This formulation applies a soft constraint that (1) gradually penalizes outputs exceeding the target length rather than imposing a hard cutoff (which is necessary to ensure gradient propagation in GRPO objective), and (2) incentivizes the model to use fewer tokens when possible without sacrificing correctness. The $\delta = 0.5$ term ensures that correct answers with minor budget violations are still preferred over incorrect answers.
+Further, \model{}-Max is trained with dual objective: when the prompt requests an exact length, the model uses Equation~\ref{eq:reward_function}; otherwise, it defaults to the maximum constraint mode using Equation~\ref{eq:reward_function_max_length}.
+
+
+\section{Experimental Setup}
+\label{sec:experimental-setup}
+
+\paragraph{Models and Datasets.}
+We conduct training on the DeepScaleR-Preview-Dataset~\citep{deepscaler2025}, a mathematics dataset consisting of 40K question-answer pairs drawn from AIME, AMC, Omni-Math~\citep{gao2024omnimathuniversalolympiadlevel} and STILL~\citep{min2024imitateexploreselfimprovereproduction}. 
+We evaluate our models on test sets of 4 different reasoning datasets: AIME 2025, MATH~\citep{hendrycks2021measuringmathematicalproblemsolving}, AMC, Olympiad-Bench~\citep{he2024olympiadbenchchallengingbenchmarkpromoting}, and additionally GPQA~\citep{rein2023gpqagraduatelevelgoogleproofqa}, LSAT~\citep{zhong2023agievalhumancentricbenchmarkevaluating}, and MMLU~\citep{hendrycks2021measuringmassivemultitasklanguage}. 
+Our base model is DeepScaleR-1.5B-Preview, a 1.5B-parameter model originally RL fine-tuned (from DeepSeek-R1-Distill-Qwen-1.5B~\citep{deepseekai2025deepseekr1incentivizingreasoningcapability}) on this dataset with a 24K token context length. Due to compute constraints, we restrict the maximum context length to 4K tokens during training and to 8K tokens during evaluation. The model is further fine-tuned for 700 steps with LCPO-Exact objective (Equation~\ref{eq:reward_function}), and the resulting model is referred to as \model{}-Exact. The model is further RL finetuned for 120 steps with the objective mentioned in Equation~\ref{eq:reward_function_max_length}, and the resulting model is referred to as \model{}-Max.
+
+\paragraph{Baselines.}
+We evaluate our proposed method against the following baselines:
+\begin{itemize}
+  \item \textbf{DeepSeek-R1-Distill-Qwen-1.5B:} is the SFT version of Qwen-2.5-1.5B-Instruct finetuned on reasoning traces of DeepSeek's R1 model. For brevity, we refer to this model as DeepSeek-R1-1.5B.
+  \item \textbf{DeepScaleR-1.5B-Preview:} the original model, evaluated without any length control modifications. For brevity, we refer this model as Agentica-24K.
+  \item \textbf{DeepScaleR-1.5B-Preview-4K:} a version of Agentic-24K fine-tuned with 4K context length. This is done due to computational constraints of training \ours{} with long sequence length (such as 24K used in Agentica-24K). The model therefore serves as a fair comparison to \model{}. For brevity, we refer to this model as Agentica-4K.
+  \item \textbf{S1:}~\citep{muennighoff2025s1simpletesttimescaling} is a budget-forcing method, which controls reasoning length using simple test-time interventions. We implement this method on top of the Agentica-24K model.
+\end{itemize} 
+
+\paragraph{Evaluation Protocol.}
+We evaluate our approaches along two dimensions. First, we assess the model's ability to adhere to the targeted length by reporting the mean deviation between the generated token length $n_y$ and the target $n_{gold}$. Second, we evaluate the overall performance (i.e., problem-solving accuracy) when generating responses at different target lengths. In our experiments, target lengths are selected from $\{512, 1024, 2048, 3600\}$ tokens. 
+
+\paragraph{Hyperparameters and Implementation Details.} 
+For GRPO training, we adopt the same hyperparameters as in DeepScaleR-1.5B-Preview. In particular, we use a learning rate of 1e-6 and a batch size of 128. The maximum context length is set to 4K tokens at training time and extended to 8K tokens during evaluation. Training is performed for 700 steps using the VeRL framework~\citep{verl2025}.
+During training, the target length $n_{gold}$ is sampled uniformly from $U(n_{min}, n_{max})$, where we set $n_{min}=100$ and $n_{max}=4000$. The balancing parameter $\alpha$ in \autoref{eq:reward_function} is fixed at 0.0003. Note that we did not conduct extensive hyperparameter tuning, so one can expect further improvements with additional optimization.
+
+\section{Results and Analysis}
+
+\input{figures/main_results} 
+
+In this section, we report and analyze the effectiveness of the proposed method (\ours{}) across various settings and benchmarks. We evaluate our method's relative performance, generalization capability on out-of-domain tasks, controllability of length constraints and competitive performance in short Chain-of-Thought (CoT) setups, and examine learned reasoning behaviors.
+
+
+\paragraph{\model{} significantly outperforms other length-controlled models while maintaining strong performance.}
+
+
+Figure~\ref{fig:main_results} compares performance of \model{}-Exact and \model{}-Max with other baselines across varying generation lengths. Both variants of \model{} achieve superior performance across all token budgets while maintaining precise length control. Compared to S1, the only other method specifically designed for length control, \model{} shows remarkable improvements, over 100-150\% relative and 20-25\% absolute performance gains at both 512 and 1024 token budgets. This substantial difference can be attributed to two key factors: (1) \model{} intelligently adapts its chain-of-thought to fit within specified length constraints without disrupting the reasoning process, while S1 often truncates mid-reasoning; and (2) \model{} is explicitly trained to generate high-quality reasoning chains of varying lengths, effectively distilling reasoning patterns from longer chains to shorter ones.
+
+Moreover, with \model{}, we observe a log-linear scaling pattern, similar to the prior works O1 and S1 by OpenAI—performance improves linearly with respect to the log-length of generated reasoning chains. However, this scaling curve for \model{} exhibits a notably smaller slope (0.24 vs. 0.37 slope of S1), indicating substantially improved effectiveness at lower token ranges. 
+
+\model{}-Exact performs approximately 1\% below Agentica-4K, which is the same underlying model as \model{}, but trained without length constraints. However, this difference is primarily observed in the AIME dataset, where unconstrained models can generate very long chains for complex problems. Additionally, \model{}-Exact allocates the same token budget to all problems regardless of difficulty, potentially using extra tokens on simpler problems.
+\model{}-Max effectively alleviates this challenge, matching the performance of Agentica-4K by optimizing token usage based on problem difficulty while respecting the upper ceiling. In doing so, it outperforms even \model{}-Exact often by up to 2x fewer tokens. \model{}-Max is particularly valuable when exact token counts are less desirable than a worst-case compute budget. 
+Finally, the scaling trends suggest that with longer context training, \model{} would match or even surpass Agentica-24K's performance while maintaining a high degree of length control.
+
+\paragraph{\model{} generalizes effectively to out-of-domain (OOD) tasks.}
+
+\input{figures/results_ood}
+
+We evaluate \model{}'s ability to generalize length control capabilities to domains outside its RL training distribution. We categorize out-of-domain (OOD) datasets: general reasoning datasets GPQA and LSAT that were not explicitly used in \model{}'s training but is likely within DeepSeek-R1-1.5B's training domain and MMLU, which likely falls even outside DeepSeek-R1-1.5B's training distribution.
+
+Figure~\ref{fig:ood_results} confirms that \model{} generalizes robustly to new domains: performance consistently scales positively with token budget for OOD general reasoning datasets, approaching or matching Agentica-4K benchmarks despite explicit length control constraints.
+For GPQA and LSAT, we observe the same linear performance scaling trend as in our primary datasets, with \model{} matching Agentica-4K's performance at comparable token budgets. This generalization is particularly impressive given that \model{} was not explicitly trained on these tasks. For MMLU, we see a less pronounced linear scaling relationship ($R^2 = 0.66$), likely because these knowledge-focused questions benefit less from extended reasoning.
+
+\paragraph{\model{} follows length constraints with high precision.}
+\label{sec:length_control_precision}
+\input{figures/length_error_results}
+
+We quantitatively assess \model{}'s ability to follow length constraints across various mathematical reasoning datasets. As shown in Figure~\ref{fig:length_error_results}, our model maintains consistent control across all token budgets (512, 1024, 2048, and 3600 tokens), with observed output lengths usually closely matching the requested lengths.
+Further, in Figure~\ref{fig:length_error_results_mean}, we show the mean error: ($\frac{E_{x \sim D}[n_{generated}] - n_{gold}}{n_{gold}}$), which captures the average deviation from target lengths across the dataset. The figure demonstrates that mean error is low: close to 3\% for all math reasoning datasets.
+Although OOD datasets exhibit predictably higher errors (20-40\%), these remain preferable over uncontrolled prompting. 
+Further Analysis in Appendix~\ref{app:length_control_precision} demonstrates that larger errors primarily appear at higher token budgets on tasks like MMLU, where the longer chain of thoughts is mostly unnecessary. Additionally, in Appendix~\ref{app:extended_training}, we show ethat rror can be further reduced significantly with extended RL training.
+
+\paragraph{Long CoT Models are secretly Strong Short CoT Models.}
+
+\input{tables/short_cot_results}
+
+Given \model{}'s strong performance at lower token budgets, we conducted a focused evaluation comparing it to both its base non-reasoning model (Qwen-2.5-1.5B-Instruct) and significantly larger non-reasoning models (GPT-4o and Llama-3.3-70B) at comparable \textit{generation lengths}. Table~\ref{tab:short_cot_results} presents these results, showing that \model{} consistently outperforms or matches all models across all datasets despite using equivalent token budgets. Further, on average, \model{} is 5\% better than its non-reasoning counterpart, and even outperforms GPT-4o by 2\% on average.
+
+This finding is remarkable, as to the best of our knowledge, this is the first demonstration that a 1.5B model can outperform frontier models such as GPT-4o, despite using the \textit{\textbf{same generation length}}.  
+Overall, the results signify that with suitable RL training, long CoT models can be adaptively used as short CoT models, while significantly outperforming their base counterparts at the same generation length.
+
+\paragraph{\model{} employs distinct reasoning strategies at different token budgets.}
+
+\input{figures/reasoning_patterns}
+
+To understand how \model{} changes its reasoning approach across different length constraints, we analyzed how frequently certain reasoning-related terms appear in outputs of different lengths. 
+Specifically, we calculated the normalized occurrence rate of most common reasoning terms in 512-token outputs compared to 4096-token outputs, showing how the model's reasoning strategies shift when given different length constraints. 
+Figure~\ref{fig:reasoning_patterns} organizes these keywords into four distinct reasoning patterns: ``Self-Correction and Verification,'' ``Exploration and Alternatives,'' ``Context Setting,'' and ``Conclusion Drawing.''
+
+\input{figures/thinking_vs_solution_analysis}
+
+Figure~\ref{fig:reasoning_patterns} shows that self-correction and verification keywords appear approximately twice as frequently in 4096-token outputs compared to 512-token outputs. Similarly, conclusion-drawing terms increase 2-10x with increased token budget, indicating more thorough solution validation and completion. 
+Interestingly, most exploration-related keywords decrease in relative frequency at higher token counts, with ``Alternatively'' being a notable exception. Overall, we observe that smaller CoTs have reasoning patterns similar to their longer counterparts, but with changed relative frequencies that favor more self-verification and conclusion drawing in longer chains-of-thought. 
+
+
+Further, Figure~\ref{fig:thinking_vs_solution_analysis} shows the ratio of thinking tokens (those within \texttt{<think>} tags) to solution tokens for different generation lengths. We observe that the ratio is relatively stable across different generation lengths. This implies for shorter CoTs, the model generally provides short solutions (often just outputting the final answer), which helps save tokens. As generation length increases, we notice a stabilized response length in the last two bars, implying the model scales its thinking tokens without making the final solution overly verbose.
+
+
+\section{Conclusion}
+
+In this work, we introduced Length Controlled Policy Optimization (\ours{}), a simple yet powerful reinforcement learning-based method enabling adaptive control over the length of reasoning chains in language models. We use \ours{} to train \model{}, a reasoning language model, optimized to produce outputs that adhere to length constraints given in its prompt. \ours{} significantly surpasses previous test-time scaling methods, achieving over 100\% relative and 20\% absolute improvements in mathematical reasoning tasks compared to prior length-control approaches.
+
+Further, we demonstrated that \model{} generalizes robustly beyond its training distribution, extending its length-controlled capabilities to out-of-domain tasks. Furthermore, our analysis revealed an intriguing phenomenon: models trained to generate longer reasoning chains become unexpectedly strong short-CoT reasoners, outperforming significantly larger frontier models such as GPT-4o at identical generation lengths. 
+By providing length control using simple prompt, \ours{} opens promising avenues toward more efficient, flexible, and scalable reasoning models.
