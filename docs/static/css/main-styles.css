@@ -775,7 +775,7 @@ body {
   .length-marker::after {
     white-space: normal;
     word-wrap: break-word;
-    max-width: 60px;
+    max-width: 80px;
     
   }
   .length-answer{
@@ -787,7 +787,7 @@ body {
   .length-marker::after {
     white-space: normal;
     word-wrap: break-word;
-    max-width: 50px;
+    max-width: 70px;
     
   }
   .length-answer{
