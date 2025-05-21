@@ -32,9 +32,33 @@
   <script src="static/js/model-comparison-chart.js"></script>
   <script src="static/js/gauge-pointer.js"></script>
   <script src="static/js/length-visualization.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <!-- Main styles moved to external CSS file -->
   <link rel="stylesheet" href="static/css/main-styles.css">
+
+  <style>
+    .card.feature-card:not(:last-child) {
+      margin-bottom: 1.5rem !important;
+    }
+    .card.feature-card,
+    .card.feature-card .card-content,
+    .card.feature-card .card-content > * {
+      min-height: 0 !important;
+      height: auto !important;
+      padding-top: 0.3rem !important;
+      padding-bottom: 0.3rem !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+    .card.feature-card .title,
+    .card.feature-card p,
+    .card.feature-card .icon {
+      margin-top: 0 !important;
+      margin-bottom: 0.3rem !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -109,7 +133,7 @@
           <span class="icon"><i class="ai ai-arxiv"></i></span>
           <span>Paper</span>
         </a>
-        <a href="https://github.com/cmu-l3/l1" class="button is-rounded is-dark is-medium">
+        <a href="https://github.com/TEAM-ARM/ARM" class="button is-rounded is-dark is-medium">
           <span class="icon"><i class="fab fa-github"></i></span>
           <span>Code</span>
         </a>
@@ -143,62 +167,58 @@
 <!-- Motivation Section -->
 <section class="section" id="motivation">
   <div class="container">
-    <h2 class="title is-2 has-text-centered mb-6">The Challenge of Length Control</h2>
+    <h2 class="title is-2 has-text-centered mb-6">Why ARM?</h2>
     
     <div class="columns is-centered">
       <div class="column is-8">
         <div class="content">
           <p class="is-size-5">
-            Reasoning language models have shown an uncanny ability to improve performance at test-time by "thinking longer"—that is, by generating longer chain-of-thought sequences and hence using more compute. However, these models lack dynamic control over output length, leading to three critical problems:
+            Large reasoning models often suffer from "overthinking" - excessive reasoning that wastes computational resources. ARM introduces adaptive reasoning formats and multiple modes to optimize token usage while maintaining performance.
           </p>
         </div>
       </div>
     </div>
     
-    <div class="columns is-multiline">
-      <div class="column is-4">
-        <div class="card feature-card">
-          <div class="card-content">
-            <div class="has-text-centered">
+    <div class="columns is-centered">
+      <div class="column is-6">
+        <div class="card feature-card mb-2">
+          <div class="card-content py-2">
+            <div class="has-text-centered mb-1">
               <span class="icon feature-icon">
-                <i class="fas fa-microchip"></i>
+                <i class="fas fa-sliders-h"></i>
               </span>
             </div>
-            <h3 class="title is-4">Computational Waste</h3>
+            <h3 class="title is-4 mb-1">Adaptive Formats</h3>
             <p>
-              In some cases, sequences span tens of thousands of tokens, wasting compute when shorter reasoning would suffice.
+              Supports four reasoning formats: Direct Answer, Short CoT, Code, and Long CoT, enabling optimal format selection for each task.
             </p>
           </div>
         </div>
-      </div>
-      
-      <div class="column is-4">
-        <div class="card feature-card">
-          <div class="card-content">
-            <div class="has-text-centered">
+
+        <div class="card feature-card mb-2">
+          <div class="card-content py-2">
+            <div class="has-text-centered mb-1">
               <span class="icon feature-icon">
-                <i class="fas fa-ban"></i>
+                <i class="fas fa-list-ol"></i>
               </span>
             </div>
-            <h3 class="title is-4">Premature Halting</h3>
+            <h3 class="title is-4 mb-1">Multiple Modes</h3>
             <p>
-              Without length control, models may stop too early on complex problems, failing to allocate enough reasoning steps.
+              Three modes: Adaptive (automatic), Instruction-Guided (explicit), and Consensus-Guided (aggregated) for flexible reasoning control.
             </p>
           </div>
         </div>
-      </div>
-      
-      <div class="column is-4">
+
         <div class="card feature-card">
-          <div class="card-content">
-            <div class="has-text-centered">
+          <div class="card-content py-2">
+            <div class="has-text-centered mb-1">
               <span class="icon feature-icon">
-                <i class="fas fa-balance-scale"></i>
+                <i class="fas fa-tachometer-alt"></i>
               </span>
             </div>
-            <h3 class="title is-4">Unexplored Trade-offs</h3>
+            <h3 class="title is-4 mb-1">Resource Efficiency</h3>
             <p>
-              There is no way to calibrate inference compute budgets for target performance levels, leaving potential efficiency gains unexplored.
+              Optimizes token usage through dynamic format selection, moving towards fully autonomous AI without human intervention.
             </p>
           </div>
         </div>
@@ -212,50 +232,53 @@
 <!-- Method Section -->
 <section class="section has-background-light" id="method">
   <div class="container">
-    <h2 class="title is-2 has-text-centered mb-6">Our Solution: Length Controlled Policy Optimization (LCPO)</h2>
+    <h2 class="title is-2 has-text-centered mb-6">Our Solution: Adaptive Group Relative Policy Optimization (Ada-GRPO)</h2>
     
     <div class="columns is-centered">
       <div class="column is-10">
         <div class="content has-text-centered">
           <p class="is-size-5 mb-5">
-            We propose <strong>Length Controlled Policy Optimization (LCPO)</strong>, a simple reinforcement learning method that gives reasoning language models adaptive control over the length using just a prompt.
+            We propose <strong>Adaptive Group Relative Policy Optimization (Ada-GRPO)</strong>, an adaptation of GRPO, which addresses the format collapse issue in traditional GRPO
           </p>
         </div>
         
         <div class="box">
           <div class="columns is-vcentered">
             <div class="column is-5">
-              <h3 class="title is-4">Two Variants</h3>
+              <h3 class="title is-4">From GRPO to Ada-GRPO</h3>
               <div class="tabs is-boxed">
                 <ul>
-                  <li class="is-active" data-tab="exact-tab">
+                  <li class="is-active" data-tab="grpo-tab">
                     <a>
                       <span class="icon"><i class="fas fa-ruler"></i></span>
-                      <span>LCPO-Exact</span>
+                      <span>GRPO</span>
                     </a>
                   </li>
-                  <li data-tab="max-tab">
+                  <li data-tab="ada-tab">
                     <a>
                       <span class="icon"><i class="fas fa-compress-arrows-alt"></i></span>
-                      <span>LCPO-Max</span>
+                      <span>Ada-GRPO</span>
                     </a>
                   </li>
                 </ul>
               </div>
               
-              <div id="exact-tab" class="tab-content is-active">
+              <div id="grpo-tab" class="tab-content is-active">
                 <div class="notification is-primary is-light">
-                  <p><strong>LCPO-Exact</strong>: Requires the generated reasoning to be <strong>exactly equal</strong> to the target length.</p>
-                  <p class="mt-3"><strong>Example prompt:</strong> "Think for exactly 512 tokens."</p>
-                  <p class="mt-3"><strong>Use case:</strong> When precise control is needed for benchmarking or exact token budgeting.</p>
+                  <p><strong>Traditional GRPO</strong>:</p>
+                  <p class="mt-3">1. <strong>Definition</strong>: For each question \( q \), samples a group of outputs \( O = \{ o_1, o_2, \ldots, o_G \} \), where \( G \) is the group size. Each output \( o_i \) receives a binary reward \( r_i \) based on prediction accuracy.</p>
+                  <p class="mt-3">2. <strong>Problem</strong>: Solely optimizes for accuracy, leading to overuse of the highest-accuracy format (e.g., Long CoT) and reduced exploration of more efficient alternatives. This phenomenon is called <strong>Format Collapse</strong>.</p>
                 </div>
               </div>
               
-              <div id="max-tab" class="tab-content">
+              <div id="ada-tab" class="tab-content">
                 <div class="notification is-success is-light">
-                  <p><strong>LCPO-Max</strong>: Requires output to be <strong>no longer than</strong> the target length, allowing flexibility while respecting upper bounds.</p>
-                  <p class="mt-3"><strong>Example prompt:</strong> "Think for maximum 1024 tokens."</p>
-                  <p class="mt-3"><strong>Use case:</strong> When limiting maximum computation while allowing flexibility for problem difficulty.</p>
+                  <p><strong>Ada-GRPO Solution</strong>:</p>
+                  <p class="mt-3"><strong>Core Idea</strong>: Introduces a format diversity scaling factor \( \alpha(t) \) that consists of two components:</p>
+                  <ul>
+                    <li>Format Diversity Scaling Factor (\( \frac{G}{F(o_i)} \)): Upweights rewards for less frequent formats</li>
+                    <li>Decay Factor (\( decay_i(t) \)): Gradually reduces diversity influence over time</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -263,78 +286,118 @@
             <div class="column is-7">
               <h3 class="title is-4 mb-4">How It Works</h3>
               
-              <!-- LCPO-Exact content - visible by default -->
-              <div id="exact-steps" class="method-steps is-active">
-              <div class="method-step">
-                <h5 class="title is-5">1. Problem Formulation</h5>
-                <p>
-                  Given an input prompt <strong>x</strong> and a target length <strong>n_gold</strong>, generate a response whose length <strong>n_y</strong> minimizes <strong>|n_gold - n_y|</strong> while producing the correct answer.
-                </p>
-              </div>
-              
-              <div class="method-step">
-                <h5 class="title is-5">2. Prompt Augmentation</h5>
-                <div class="columns is-vcentered">
-                  <div class="column">
-                    <p>Each prompt is augmented with a target length instruction:</p>
-                      <p><code>x_new = Concat(x, "Think for exactly n_gold tokens.")</code></p>
-                  </div>
-                  <div class="column is-narrow">
-                    <div class="box has-background-light has-text-centered">
-                      <i class="fas fa-plus fa-2x"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="method-step">
-                <h5 class="title is-5">3. Reinforcement Learning</h5>
-                <p>We optimize using a reward function that balances accuracy and length adherence:</p>
-                <div class="has-text-centered">
-                  <p class="is-family-monospace p-3 has-background-light is-inline-block">
-                    r(y, y_gold, n_gold) = I(y = y_gold) - α · |n_gold - n_y|
-                  </p>
-                  <p class="mt-2">
-                    <span class="tag is-info">α</span> balances correctness vs. length matching
-                  </p>
-                </div>
-              </div>
-            </div>
-              
-              <!-- LCPO-Max content - hidden by default -->
-              <div id="max-steps" class="method-steps" style="display: none;">
+              <div id="grpo-steps" class="method-steps is-active">
                 <div class="method-step">
-                  <h5 class="title is-5">1. Problem Formulation</h5>
-                  <p>
-                    Given an input prompt <strong>x</strong> and a maximum length <strong>n_gold</strong>, generate a response whose length <strong>n_y</strong> is <strong>no longer than n_gold</strong> while producing the correct answer, using as few tokens as necessary.
-                  </p>
-          </div>
-                
-                <div class="method-step">
-                  <h5 class="title is-5">2. Prompt Augmentation</h5>
+                  <h5 class="title is-5">1. Group Sampling</h5>
                   <div class="columns is-vcentered">
                     <div class="column">
-                      <p>Each prompt is augmented with a maximum length instruction:</p>
-                      <p><code>x_new = Concat(x, "Think for maximum n_gold tokens.")</code></p>
+                      <p>
+                        For each question \( q \), sample a group of outputs \( O = \{ o_1, o_2, \ldots, o_G \} \), where \( G \) is the group size. Each output \( o_i \) is associated with a binary reward \( r_i \) based on prediction accuracy.
+                      </p>
                     </div>
                     <div class="column is-narrow">
                       <div class="box has-background-light has-text-centered">
-                        <i class="fas fa-plus fa-2x"></i>
+                        <i class="fas fa-layer-group fa-2x"></i>
                       </div>
                     </div>
                   </div>
                 </div>
                 
                 <div class="method-step">
-                  <h5 class="title is-5">3. Reinforcement Learning</h5>
-                  <p>We optimize using a modified reward function with soft constraints:</p>
-                  <div class="has-text-centered">
-                    <p class="is-family-monospace p-3 has-background-light is-inline-block">
-                      r(y, y_gold, n_gold) = I(y = y_gold) · clip(α · (n_gold - n_y) + δ, 0, 1)
-                    </p>
-                    <p class="mt-2">
-                      <span class="tag is-info">δ</span> ensures correct answers with minor budget violations are preferred over incorrect answers
-                    </p>
+                  <h5 class="title is-5">2. Reward Computation</h5>
+                  <div class="columns is-vcentered">
+                    <div class="column">
+                      <p>Compute binary reward for each output:</p>
+                      <p class="is-family-monospace p-2 has-background-light">
+                        \( r_i = \mathbb{1}(\text{pred} = \text{gt}) \)
+                      </p>
+                      <p>where 𝟙 is the indicator function, pred is the model's prediction, and gt is the ground truth.</p>
+                    </div>
+                    <div class="column is-narrow">
+                      <div class="box has-background-light has-text-centered">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="method-step">
+                  <h5 class="title is-5">3. Group Advantage</h5>
+                  <div class="columns is-vcentered">
+                    <div class="column">
+                      <p>Calculate group advantage for policy optimization:</p>
+                      <div class="has-text-centered">
+                        <p class="is-family-monospace p-3 has-background-light is-inline-block">
+                          \( \hat{A}_{ik} = \frac{r_i - \text{mean}(r)}{\text{std}(r)} \)
+                        </p>
+                        <p class="mt-2">
+                          <span class="tag is-info">\( r \)</span> represents the group of rewards
+                        </p>
+                      </div>
+                    </div>
+                    <div class="column is-narrow">
+                      <div class="box has-background-light has-text-centered">
+                        <i class="fas fa-chart-bar fa-2x"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="ada-steps" class="method-steps" style="display: none;">
+                <div class="method-step">
+                  <h5 class="title is-5">Reward Reshaping</h5>
+                  <div class="columns is-vcentered">
+                    <div class="column">
+                      <p>Apply format diversity scaling to prevent format collapse:</p>
+                      <p class="is-family-monospace p-2 has-background-light">
+                        \( r_i' = \alpha_i(t) \cdot r_i \)
+                      </p>
+                      <p>where \( r_i \) is the original binary reward and \( \alpha_i(t) \) is the format diversity scaling factor.</p>
+                    </div>
+                    <div class="column is-narrow">
+                      <div class="box has-background-light has-text-centered">
+                        <i class="fas fa-magic fa-2x"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="method-step">
+                  <h5 class="title is-5">Format Diversity Scaling Factor \( \frac{G}{F(o_i)} \)</h5>
+                  <div class="columns is-vcentered">
+                    <div class="column">
+                      <p>Scale rewards based on format frequency:</p>
+                      <p class="is-family-monospace p-2 has-background-light">
+                        \( \alpha_i(t) = \frac{G}{F(o_i)} \cdot decay_i(t) \)
+                      </p>
+                      <p>where \( G \) is group size and \( F(o_i) \) is the frequency of the format used in output \( o_i \).</p>
+                    </div>
+                    <div class="column is-narrow">
+                      <div class="box has-background-light has-text-centered">
+                        <i class="fas fa-palette fa-2x"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="method-step">
+                  <h5 class="title is-5">Decay Factor \( decay_i(t) \)</h5>
+                  <div class="columns is-vcentered">
+                    <div class="column">
+                      <p>Gradually reduce diversity influence over time:</p>
+                      <p class="is-family-monospace p-2 has-background-light">
+                        $$
+                        decay_i(t) = \frac{F(o_i)}{G} + 0.5 \cdot \left(1-\frac{F(o_i)}{G}\right) \cdot (1+\cos(\pi t/T))
+                        $$
+                      </p>
+                      <p>where \( t \) is the current training step and \( T \) is the total number of training steps.</p>
+                    </div>
+                    <div class="column is-narrow">
+                      <div class="box has-background-light has-text-centered">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -760,5 +823,46 @@
     </div>
   </div>
 </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Get all tab links
+  const tabLinks = document.querySelectorAll('.tabs li');
+  
+  // Add click event listener to each tab
+  tabLinks.forEach(tab => {
+    tab.addEventListener('click', function() {
+      // Remove active class from all tabs
+      tabLinks.forEach(t => t.classList.remove('is-active'));
+      // Add active class to clicked tab
+      this.classList.add('is-active');
+      
+      // Get the target tab content
+      const targetTab = this.getAttribute('data-tab');
+      
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('is-active');
+      });
+      
+      // Show target tab content
+      document.getElementById(targetTab).classList.add('is-active');
+      
+      // Handle method steps display
+      const methodSteps = document.querySelectorAll('.method-steps');
+      methodSteps.forEach(step => {
+        step.style.display = 'none';
+      });
+      
+      // Show corresponding method steps
+      if (targetTab === 'grpo-tab') {
+        document.getElementById('grpo-steps').style.display = 'block';
+      } else if (targetTab === 'ada-tab') {
+        document.getElementById('ada-steps').style.display = 'block';
+      }
+    });
+  });
+});
+</script>
 
 
