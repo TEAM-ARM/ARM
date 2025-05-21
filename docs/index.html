@@ -415,30 +415,37 @@
     <h2 class="title is-2 has-text-centered mb-6">Key Results</h2>
     
     <div class="columns is-multiline is-centered">
-      <div class="column is-3">
-        <div class="result-metric">
-          <p><i class="fas fa-arrow-up fa-2x mb-3" style="color: var(--primary);"></i></p>
-          <p class="result-value-small">Upto 2x</p>
-          <p>Performance improvement per token over S1 method</p>
-        </div>
-      </div>
-      
-      <div class="column is-3">
+      <div class="column is-3" style="max-width:280px;min-width:180px;flex:1 1 180px;">
         <div class="result-metric">
           <p><i class="fas fa-bullseye fa-2x mb-3" style="color: var(--danger);"></i></p>
-          <p class="result-value">~3%</p>
-          <p>Mean length deviation on math reasoning tasks</p>
+          <p class="result-value-small">&lt;1%</p>
+          <p>Performance loss</p>
         </div>
       </div>
-      
-      <div class="column is-3">
+      <div class="column is-3" style="max-width:280px;min-width:180px;flex:1 1 180px;">
         <div class="result-metric">
-          <p><i class="fas fa-check-double fa-2x mb-3" style="color: var(--warning);"></i></p>
-          <p class="result-value-small">+2%</p>
-          <p>Our 1.5B model outperforms GPT-4o at <strong>equal reasoning lengths</strong></p>
+          <p><i class="fas fa-piggy-bank fa-2x mb-3" style="color: var(--warning);"></i></p>
+          <p class="result-value-small">&gt;30%</p>
+          <p>Average token savings</p>
+        </div>
+      </div>
+      <div class="column is-3" style="max-width:280px;min-width:180px;flex:1 1 180px;">
+        <div class="result-metric">
+          <p><i class="fas fa-arrow-up fa-2x mb-3" style="color: var(--success);"></i></p>
+          <p class="result-value-small">&gt;70%</p>
+          <p>Maximum token savings</p>
+        </div>
+      </div>
+      <div class="column is-3" style="max-width:280px;min-width:180px;flex:1 1 180px;">
+        <div class="result-metric">
+          <p><i class="fas fa-bolt fa-2x mb-3" style="color: var(--primary);"></i></p>
+          <p class="result-value-small">2x</p>
+          <p>Training speedup</p>
         </div>
       </div>
     </div>
+    
+    
     
     <div class="columns is-centered mt-6">
       <div class="column is-10">
