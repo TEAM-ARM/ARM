@@ -35,6 +35,7 @@
   <script src="static/js/length-visualization.js"></script>
   <script src="static/js/table-toggle.js"></script>
   <script src="static/js/analysis-tabs.js"></script>
+  <script src="static/js/method-section-tabs.js"></script> 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
@@ -1767,100 +1768,8 @@
     </div>
   </section>
 
-  <!-- Key Findings Section -->
-  <section class="section" id="findings">
-    <div class="container">
-      <h2 class="title is-2 has-text-centered mb-6">Surprising Findings</h2>
-
-      <div class="columns">
-        <div class="column is-6">
-          <div class="box" style="height: 100%;">
-            <h3 class="title is-4 has-text-centered mb-4">Long CoT Models are Secretly Strong Short CoT Models</h3>
-
-            <div class="example-box">
-              <div class="columns is-vcentered">
-                <div class="column is-narrow">
-                  <span class="icon is-large has-text-primary">
-                    <i class="fas fa-lightbulb fa-2x"></i>
-                  </span>
-                </div>
-                <div class="column">
-                  <p class="has-text-weight-bold">Key Insight:</p>
-                  <p>Our L1-1.5B model trained with LCPO outperforms its original counterparts by significant margins
-                    (up to 10% improvement) and even matches GPT-4o despite using the same token budget.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="comparison-container mt-4">
-              <h5 class="title is-5 has-text-centered mb-3">Model Performance Comparison</h5>
-              <div style="height: 350px; position: relative;">
-                <canvas id="modelComparisonChart"></canvas>
-              </div>
-              <p class="has-text-centered is-size-5 mt-2">Each pair of model uses the <b>same generation length</b></p>
-              <p class="has-text-centered is-size-7 mt-2">Hover over bars to see exact accuracy and token count</p>
-
-            </div>
-
-            <div class="notification is-info is-light mt-3">
-              <p class="has-text-centered">
-                <strong>First demonstration that a 1.5B model can match the performance of GPT-4o, despite using the
-                  same generation length.</strong>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="column is-6">
-          <div class="box" style="height: 100%;">
-            <h3 class="title is-4 has-text-centered mb-4">Generalizes to Out-of-Distribution Tasks</h3>
-
-            <div class="example-box">
-              <div class="columns is-vcentered">
-                <div class="column is-narrow">
-                  <span class="icon is-large has-text-warning">
-                    <i class="fas fa-brain fa-2x"></i>
-                  </span>
-                </div>
-                <div class="column">
-                  <p class="has-text-weight-bold">Key Insight:</p>
-                  <p>L1's length control capabilities generalize to domains outside its training distribution, including
-                    logical reasoning (GPQA, LSAT) and general knowledge (MMLU).</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="comparison-container mt-4">
-              <h5 class="title is-5 has-text-centered mb-3">OOD Task Performance</h5>
-              <div class="has-text-centered">
-                <img src="static/images/ood_results.png" alt="Out-of-domain task performance"
-                  style="max-width: 100%; margin: 0 auto;">
-              </div>
-              <p class="has-text-centered is-size-7 mt-2">Performance scales positively with token budget even on OOD
-                tasks</p>
-            </div>
-
-            <div class="notification is-info is-light mt-3">
-              <p class="has-text-centered">
-                <strong>L1's length control can generalize to new domains, matching base model performance at comparable
-                  token budgets.</strong>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="findings">
-    <div class="columns is-centered mt-5">
-      <div class="column is-10">
-      </div>
-    </div>
-  </section>
-
   <!-- Citation Section -->
-  <section class="section has-background-light">
+  <section class="section"> <!-- Removed has-background-light -->
     <div class="container">
       <h2 class="title is-2 has-text-centered mb-6">Citation</h2>
 
@@ -1900,52 +1809,6 @@
     </div>
   </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Get all tab links
-      const tabLinks = document.querySelectorAll('.tabs li');
 
-      // Add click event listener to each tab
-      tabLinks.forEach(tab => {
-        tab.addEventListener('click', function () {
-          // Remove active class from all tabs
-          tabLinks.forEach(t => t.classList.remove('is-active'));
-          // Add active class to clicked tab
-          this.classList.add('is-active');
-
-          // Get the target tab content
-          const targetTab = this.getAttribute('data-tab');
-
-          // Hide all tab contents
-          document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('is-active');
-          });
-
-          // Show target tab content
-          document.getElementById(targetTab).classList.add('is-active');
-
-          // Handle method steps display
-          const methodSteps = document.querySelectorAll('.method-steps');
-          methodSteps.forEach(step => {
-            step.style.display = 'none';
-          });
-
-          // Show corresponding method steps
-          if (targetTab === 'grpo-tab') {
-            document.getElementById('grpo-steps').style.display = 'block';
-          } else if (targetTab === 'ada-tab') {
-            document.getElementById('ada-steps').style.display = 'block';
-          }
-        });
-      });
-    });
-  </script>
-
-
-  } else if (targetTab === 'ada-tab') {
-  document.getElementById('ada-steps').style.display = 'block';
-  }
-  });
-  });
-  });
-  </script>
+</body>
+</html>
