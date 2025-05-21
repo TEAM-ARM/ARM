@@ -883,4 +883,9 @@ body {
   .model-comparison-table th, .model-comparison-table td {
     padding: 0.3rem;
   }
+}
+
+/* Add styles for table container to allow horizontal scrolling if needed */
+.table-container {
+  overflow-x: auto;
 } 

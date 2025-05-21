@@ -2,13 +2,14 @@
 .chart-controls {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   margin-bottom: 2rem;
-  gap: 10px;
+  gap: 8px;
 }
 
 .chart-control-btn {
-  margin: 0 0.5rem;
-  padding: 0.5rem 1rem;
+  margin: 0.25rem 0.25rem;
+  padding: 0.6rem 1.2rem;
   background-color: white;
   border: 2px solid #3273dc;
   border-radius: 30px;
@@ -16,6 +17,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .chart-control-btn:hover {
