@@ -32,6 +32,7 @@
   <script src="static/js/model-comparison-chart.js"></script>
   <script src="static/js/gauge-pointer.js"></script>
   <script src="static/js/length-visualization.js"></script>
+  <script src="static/js/table-toggle.js"></script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
@@ -445,7 +446,603 @@
       </div>
     </div>
     
-    
+    <!-- Model Performance Comparison Table Section -->
+<div class="columns is-centered mt-6">
+  <div class="column is-12">
+    <div class="box">
+      <h3 class="title is-4 has-text-centered mb-4">Detailed Model Performance Comparison</h3>
+      
+      <p class="content has-text-centered mb-4" style="max-width: 90%; margin: 0 auto;">
+        Performance of various models across evaluation datasets. "Tokens" refers to the token cost for each model on each dataset. For each model, k=1 corresponds to pass@1, and k=8 corresponds to maj@8. When k=8, the token cost is averaged over a single output.
+      </p>
+
+      <!-- Toggle Button -->
+      <div class="has-text-centered mb-4">
+        <button id="toggle-table-btn" class="button is-info">
+          <span class="icon is-small">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>Show Detailed Table</span>
+        </button>
+      </div>
+      
+      <!-- Responsive Table Container -->
+      <div id="detailed-table-container" class="table-container" style="display: none; max-width: 90%; margin: 0 auto;">
+        <!-- <style> (CSS will be moved to main-styles.css) </style> -->
+        
+        <table class="model-comparison-table">
+          <thead>
+            <tr>
+              <th rowspan="3">Models</th>
+              <th rowspan="3">k</th>
+              <th colspan="8">Accuracy (↑)</th>
+              <th colspan="8">Tokens (↓)</th>
+            </tr>
+            <tr>
+              <th colspan="2">Easy</th>
+              <th colspan="4">Medium</th>
+              <th>Hard</th>
+              <th rowspan="2">Avg.</th>
+              <th colspan="2">Easy</th>
+              <th colspan="4">Medium</th>
+              <th>Hard</th>
+              <th rowspan="2">Avg.</th>
+            </tr>
+            <tr>
+              <th>CSQA†</th>
+              <th>OBQA‡</th>
+              <th>GSM8K†</th>
+              <th>MATH†</th>
+              <th>SVAMP‡</th>
+              <th>BBH‡</th>
+              <th>AIME'25‡</th>
+              <th>CSQA†</th>
+              <th>OBQA‡</th>
+              <th>GSM8K†</th>
+              <th>MATH†</th>
+              <th>SVAMP‡</th>
+              <th>BBH‡</th>
+              <th>AIME'25‡</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="model-row">
+              <td class="model-name-cell">GPT-4o</td>
+              <td>1</td>
+              <td class="accuracy-cell">85.9</td>
+              <td class="accuracy-cell">94.2</td>
+              <td class="accuracy-cell">95.9</td>
+              <td class="accuracy-cell">75.9</td>
+              <td class="accuracy-cell">91.3</td>
+              <td class="accuracy-cell">84.7</td>
+              <td class="accuracy-cell">10.0</td>
+              <td class="accuracy-cell">76.8</td>
+              <td class="tokens-cell">192</td>
+              <td class="tokens-cell">165</td>
+              <td class="tokens-cell">287</td>
+              <td class="tokens-cell">663</td>
+              <td class="tokens-cell">156</td>
+              <td class="tokens-cell">278</td>
+              <td class="tokens-cell">984</td>
+              <td class="tokens-cell">389</td>
+            </tr>
+            <tr>
+              <td class="model-name-cell">o1-preview</td>
+              <td>1</td>
+              <td class="accuracy-cell">85.5</td>
+              <td class="accuracy-cell">95.6</td>
+              <td class="accuracy-cell">94.2</td>
+              <td class="accuracy-cell">92.6</td>
+              <td class="accuracy-cell">92.7</td>
+              <td class="accuracy-cell">91.8</td>
+              <td class="accuracy-cell">40.0</td>
+              <td class="accuracy-cell">84.6</td>
+              <td class="tokens-cell">573</td>
+              <td class="tokens-cell">492</td>
+              <td class="tokens-cell">456</td>
+              <td class="tokens-cell">1863</td>
+              <td class="tokens-cell">489</td>
+              <td class="tokens-cell">940</td>
+              <td class="tokens-cell">7919</td>
+              <td class="tokens-cell">1819</td>
+            </tr>
+            <tr>
+              <td class="model-name-cell">o4-mini-high</td>
+              <td>1</td>
+              <td class="accuracy-cell">84.7</td>
+              <td class="accuracy-cell">96.0</td>
+              <td class="accuracy-cell">96.9</td>
+              <td class="accuracy-cell">97.7</td>
+              <td class="accuracy-cell">94.0</td>
+              <td class="accuracy-cell">92.2</td>
+              <td class="accuracy-cell">96.7</td>
+              <td class="accuracy-cell">94.0</td>
+              <td class="tokens-cell">502</td>
+              <td class="tokens-cell">289</td>
+              <td class="tokens-cell">339</td>
+              <td class="tokens-cell">1332</td>
+              <td class="tokens-cell">301</td>
+              <td class="tokens-cell">755</td>
+              <td class="tokens-cell">9850</td>
+              <td class="tokens-cell">1910</td>
+            </tr>
+            <tr>
+              <td class="model-name-cell">DeepSeek-V3</td>
+              <td>1</td>
+              <td class="accuracy-cell">82.4</td>
+              <td class="accuracy-cell">96.0</td>
+              <td class="accuracy-cell">96.5</td>
+              <td class="accuracy-cell">91.8</td>
+              <td class="accuracy-cell">93.7</td>
+              <td class="accuracy-cell">85.8</td>
+              <td class="accuracy-cell">36.7</td>
+              <td class="accuracy-cell">83.3</td>
+              <td class="tokens-cell">231</td>
+              <td class="tokens-cell">213</td>
+              <td class="tokens-cell">236</td>
+              <td class="tokens-cell">887</td>
+              <td class="tokens-cell">160</td>
+              <td class="tokens-cell">400</td>
+              <td class="tokens-cell">2992</td>
+              <td class="tokens-cell">732</td>
+            </tr>
+            <tr>
+              <td class="model-name-cell">DeepSeek-R1</td>
+              <td>1</td>
+              <td class="accuracy-cell">83.3</td>
+              <td class="accuracy-cell">94.8</td>
+              <td class="accuracy-cell">96.4</td>
+              <td class="accuracy-cell">97.1</td>
+              <td class="accuracy-cell">96.0</td>
+              <td class="accuracy-cell">85.0</td>
+              <td class="accuracy-cell">70.0</td>
+              <td class="accuracy-cell">88.9</td>
+              <td class="tokens-cell">918</td>
+              <td class="tokens-cell">736</td>
+              <td class="tokens-cell">664</td>
+              <td class="tokens-cell">2339</td>
+              <td class="tokens-cell">589</td>
+              <td class="tokens-cell">1030</td>
+              <td class="tokens-cell">9609</td>
+              <td class="tokens-cell">2270</td>
+            </tr>
+            <tr>
+              <td class="model-name-cell">DS-R1-Distill-1.5B</td>
+              <td>1</td>
+              <td class="accuracy-cell">47.6</td>
+              <td class="accuracy-cell">48.6</td>
+              <td class="accuracy-cell">79.4</td>
+              <td class="accuracy-cell">84.6</td>
+              <td class="accuracy-cell">86.7</td>
+              <td class="accuracy-cell">53.5</td>
+              <td class="accuracy-cell">20.0</td>
+              <td class="accuracy-cell">60.1</td>
+              <td class="tokens-cell">987</td>
+              <td class="tokens-cell">1540</td>
+              <td class="tokens-cell">841</td>
+              <td class="tokens-cell">3875</td>
+              <td class="tokens-cell">606</td>
+              <td class="tokens-cell">3005</td>
+              <td class="tokens-cell">13118</td>
+              <td class="tokens-cell">3425</td>
+            </tr>
+            <tr>
+              <td class="model-name-cell">DS-R1-Distill-7B</td>
+              <td>1</td>
+              <td class="accuracy-cell">64.9</td>
+              <td class="accuracy-cell">77.4</td>
+              <td class="accuracy-cell">90.0</td>
+              <td class="accuracy-cell">93.6</td>
+              <td class="accuracy-cell">90.3</td>
+              <td class="accuracy-cell">72.1</td>
+              <td class="accuracy-cell">40.0</td>
+              <td class="accuracy-cell">75.5</td>
+              <td class="tokens-cell">792</td>
+              <td class="tokens-cell">928</td>
+              <td class="tokens-cell">574</td>
+              <td class="tokens-cell">3093</td>
+              <td class="tokens-cell">315</td>
+              <td class="tokens-cell">1448</td>
+              <td class="tokens-cell">12427</td>
+              <td class="tokens-cell">2797</td>
+            </tr>
+            <tr>
+              <td class="model-name-cell">DS-R1-Distill-14B</td>
+              <td>1</td>
+              <td class="accuracy-cell">80.6</td>
+              <td class="accuracy-cell">93.2</td>
+              <td class="accuracy-cell">94.0</td>
+              <td class="accuracy-cell">95.5</td>
+              <td class="accuracy-cell">92.7</td>
+              <td class="accuracy-cell">80.4</td>
+              <td class="accuracy-cell">50.0</td>
+              <td class="accuracy-cell">83.8</td>
+              <td class="tokens-cell">816</td>
+              <td class="tokens-cell">750</td>
+              <td class="tokens-cell">825</td>
+              <td class="tokens-cell">2682</td>
+              <td class="tokens-cell">726</td>
+              <td class="tokens-cell">1292</td>
+              <td class="tokens-cell">11004</td>
+              <td class="tokens-cell">2585</td>
+            </tr>
+            <tr>
+              <td class="model-name-cell">DS-R1-Distill-32B</td>
+              <td>1</td>
+              <td class="accuracy-cell">83.2</td>
+              <td class="accuracy-cell">94.6</td>
+              <td class="accuracy-cell">93.5</td>
+              <td class="accuracy-cell">93.0</td>
+              <td class="accuracy-cell">92.0</td>
+              <td class="accuracy-cell">86.3</td>
+              <td class="accuracy-cell">56.7</td>
+              <td class="accuracy-cell">85.6</td>
+              <td class="tokens-cell">674</td>
+              <td class="tokens-cell">698</td>
+              <td class="tokens-cell">438</td>
+              <td class="tokens-cell">2161</td>
+              <td class="tokens-cell">283</td>
+              <td class="tokens-cell">999</td>
+              <td class="tokens-cell">11276</td>
+              <td class="tokens-cell">2361</td>
+            </tr>
+            <!-- Qwen2.5-3B -->
+            <tr class="model-row">
+              <td class="model-name-cell" rowspan="2">Qwen2.5-3B</td>
+              <td>1</td>
+              <td class="accuracy-cell">66.5</td>
+              <td class="accuracy-cell">65.8</td>
+              <td class="accuracy-cell">66.9</td>
+              <td class="accuracy-cell">37.7</td>
+              <td class="accuracy-cell">71.3</td>
+              <td class="accuracy-cell">38.4</td>
+              <td class="accuracy-cell">0</td>
+              <td class="accuracy-cell">49.5</td>
+              <td class="tokens-cell">97</td>
+              <td class="tokens-cell">120</td>
+              <td class="tokens-cell">150</td>
+              <td class="tokens-cell">419</td>
+              <td class="tokens-cell">76</td>
+              <td class="tokens-cell">232</td>
+              <td class="tokens-cell">1393</td>
+              <td class="tokens-cell">355</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">75.5</td>
+              <td class="accuracy-cell">77.4</td>
+              <td class="accuracy-cell">80.9</td>
+              <td class="accuracy-cell">50.8</td>
+              <td class="accuracy-cell">83.7</td>
+              <td class="accuracy-cell">47.1</td>
+              <td class="accuracy-cell">0</td>
+              <td class="accuracy-cell">59.3</td>
+              <td class="tokens-cell">96</td>
+              <td class="tokens-cell">100</td>
+              <td class="tokens-cell">149</td>
+              <td class="tokens-cell">424</td>
+              <td class="tokens-cell">85</td>
+              <td class="tokens-cell">240</td>
+              <td class="tokens-cell">1544</td>
+              <td class="tokens-cell">377</td>
+            </tr>
+            <!-- Qwen2.5-3B_SFT -->
+            <tr>
+              <td class="model-name-cell" rowspan="2">Qwen2.5-3B<sub>SFT</sub></td>
+              <td>1</td>
+              <td class="accuracy-cell">72.8</td>
+              <td class="accuracy-cell">72.4</td>
+              <td class="accuracy-cell">35.7</td>
+              <td class="accuracy-cell">20.9</td>
+              <td class="accuracy-cell">62.3</td>
+              <td class="accuracy-cell">37.4</td>
+              <td class="accuracy-cell">0</td>
+              <td class="accuracy-cell">43.1</td>
+              <td class="tokens-cell">99</td>
+              <td class="tokens-cell">108</td>
+              <td class="tokens-cell">145</td>
+              <td class="tokens-cell">229</td>
+              <td class="tokens-cell">126</td>
+              <td class="tokens-cell">311</td>
+              <td class="tokens-cell">694</td>
+              <td class="tokens-cell">245</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">75.5</td>
+              <td class="accuracy-cell">77.4</td>
+              <td class="accuracy-cell">56.0</td>
+              <td class="accuracy-cell">27.6</td>
+              <td class="accuracy-cell">74.7</td>
+              <td class="accuracy-cell">43.5</td>
+              <td class="accuracy-cell">0</td>
+              <td class="accuracy-cell">50.7</td>
+              <td class="tokens-cell">97</td>
+              <td class="tokens-cell">103</td>
+              <td class="tokens-cell">132</td>
+              <td class="tokens-cell">231</td>
+              <td class="tokens-cell">108</td>
+              <td class="tokens-cell">309</td>
+              <td class="tokens-cell">537</td>
+              <td class="tokens-cell">217</td>
+            </tr>
+            <!-- Qwen2.5-3B_SFT+GRPO -->
+            <tr>
+              <td class="model-name-cell" rowspan="2">Qwen2.5-3B<sub>SFT+GRPO</sub></td>
+              <td>1</td>
+              <td class="accuracy-cell">79.7</td>
+              <td class="accuracy-cell">79.0</td>
+              <td class="accuracy-cell">88.7</td>
+              <td class="accuracy-cell">66.6</td>
+              <td class="accuracy-cell">92.0</td>
+              <td class="accuracy-cell">52.6</td>
+              <td class="accuracy-cell">6.7</td>
+              <td class="accuracy-cell">66.5</td>
+              <td class="tokens-cell">425</td>
+              <td class="tokens-cell">501</td>
+              <td class="tokens-cell">788</td>
+              <td class="tokens-cell">1586</td>
+              <td class="tokens-cell">630</td>
+              <td class="tokens-cell">994</td>
+              <td class="tokens-cell">3027</td>
+              <td class="tokens-cell">1136</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">80.3</td>
+              <td class="accuracy-cell">80.0</td>
+              <td class="accuracy-cell">91.4</td>
+              <td class="accuracy-cell">74.0</td>
+              <td class="accuracy-cell">94.7</td>
+              <td class="accuracy-cell">56.2</td>
+              <td class="accuracy-cell">6.7</td>
+              <td class="accuracy-cell">69.0</td>
+              <td class="tokens-cell">429</td>
+              <td class="tokens-cell">506</td>
+              <td class="tokens-cell">802</td>
+              <td class="tokens-cell">1590</td>
+              <td class="tokens-cell">638</td>
+              <td class="tokens-cell">996</td>
+              <td class="tokens-cell">3247</td>
+              <td class="tokens-cell">1172</td>
+            </tr>
+            <!-- ARM-3B -->
+            <tr>
+              <td class="model-name-cell" rowspan="2">ARM-3B</td>
+              <td>1</td>
+              <td class="accuracy-cell">79.8</td>
+              <td class="accuracy-cell">78.0</td>
+              <td class="accuracy-cell">83.8</td>
+              <td class="accuracy-cell">62.9</td>
+              <td class="accuracy-cell">89.7</td>
+              <td class="accuracy-cell">50.0</td>
+              <td class="accuracy-cell">6.7</td>
+              <td class="accuracy-cell">64.4</td>
+              <td class="tokens-cell">118</td>
+              <td class="tokens-cell">156</td>
+              <td class="tokens-cell">346</td>
+              <td class="tokens-cell">1013</td>
+              <td class="tokens-cell">264</td>
+              <td class="tokens-cell">436</td>
+              <td class="tokens-cell">2958</td>
+              <td class="tokens-cell">756</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">80.1</td>
+              <td class="accuracy-cell">78.0</td>
+              <td class="accuracy-cell">90.8</td>
+              <td class="accuracy-cell">72.8</td>
+              <td class="accuracy-cell">95.0</td>
+              <td class="accuracy-cell">53.8</td>
+              <td class="accuracy-cell">6.7</td>
+              <td class="accuracy-cell">68.2</td>
+              <td class="tokens-cell">123</td>
+              <td class="tokens-cell">169</td>
+              <td class="tokens-cell">359</td>
+              <td class="tokens-cell">1036</td>
+              <td class="tokens-cell">246</td>
+              <td class="tokens-cell">430</td>
+              <td class="tokens-cell">3083</td>
+              <td class="tokens-cell">778</td>
+            </tr>
+            <tr class="delta-row">
+              <td colspan="2">Δ</td>
+              <td class="accuracy-cell negative-value">-0.2</td>
+              <td class="accuracy-cell negative-value">-2.0</td>
+              <td class="accuracy-cell negative-value">-0.6</td>
+              <td class="accuracy-cell negative-value">-1.2</td>
+              <td class="accuracy-cell positive-value">+0.3</td>
+              <td class="accuracy-cell negative-value">-2.4</td>
+              <td class="accuracy-cell">0</td>
+              <td class="accuracy-cell negative-value">-0.8</td>
+              <td class="tokens-cell positive-value">-71.3%</td>
+              <td class="tokens-cell positive-value">-66.6%</td>
+              <td class="tokens-cell positive-value">-55.2%</td>
+              <td class="tokens-cell positive-value">-34.8%</td>
+              <td class="tokens-cell positive-value">-61.4%</td>
+              <td class="tokens-cell positive-value">-56.8%</td>
+              <td class="tokens-cell positive-value">-5.1%</td>
+              <td class="tokens-cell positive-value">-33.6%</td>
+            </tr>
+            
+            <!-- Qwen2.5-7B -->
+            <tr class="model-row">
+              <td class="model-name-cell" rowspan="2">Qwen2.5-7B</td>
+              <td>1</td>
+              <td class="accuracy-cell">76.7</td>
+              <td class="accuracy-cell">78.6</td>
+              <td class="accuracy-cell">81.6</td>
+              <td class="accuracy-cell">50.1</td>
+              <td class="accuracy-cell">81.0</td>
+              <td class="accuracy-cell">51.7</td>
+              <td class="accuracy-cell">3.3</td>
+              <td class="accuracy-cell">60.4</td>
+              <td class="tokens-cell">64</td>
+              <td class="tokens-cell">83</td>
+              <td class="tokens-cell">156</td>
+              <td class="tokens-cell">376</td>
+              <td class="tokens-cell">99</td>
+              <td class="tokens-cell">182</td>
+              <td class="tokens-cell">767</td>
+              <td class="tokens-cell">247</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">82.0</td>
+              <td class="accuracy-cell">86.4</td>
+              <td class="accuracy-cell">89.9</td>
+              <td class="accuracy-cell">64.7</td>
+              <td class="accuracy-cell">89.7</td>
+              <td class="accuracy-cell">62.0</td>
+              <td class="accuracy-cell">3.3</td>
+              <td class="accuracy-cell">68.3</td>
+              <td class="tokens-cell">66</td>
+              <td class="tokens-cell">74</td>
+              <td class="tokens-cell">156</td>
+              <td class="tokens-cell">370</td>
+              <td class="tokens-cell">92</td>
+              <td class="tokens-cell">183</td>
+              <td class="tokens-cell">881</td>
+              <td class="tokens-cell">260</td>
+            </tr>
+            
+            <!-- Qwen2.5-7B_SFT -->
+            <tr>
+              <td class="model-name-cell" rowspan="2">Qwen2.5-7B<sub>SFT</sub></td>
+              <td>1</td>
+              <td class="accuracy-cell">80.8</td><td class="accuracy-cell">81.2</td><td class="accuracy-cell">54.4</td><td class="accuracy-cell">30.4</td><td class="accuracy-cell">76.0</td><td class="accuracy-cell">48.2</td><td class="accuracy-cell">0</td><td class="accuracy-cell">53.0</td>
+              <td class="tokens-cell">136</td><td class="tokens-cell">150</td><td class="tokens-cell">184</td><td class="tokens-cell">348</td><td class="tokens-cell">126</td><td class="tokens-cell">245</td><td class="tokens-cell">1239</td><td class="tokens-cell">347</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">83.9</td><td class="accuracy-cell">84.6</td><td class="accuracy-cell">79.4</td><td class="accuracy-cell">42.4</td><td class="accuracy-cell">88.0</td><td class="accuracy-cell">56.0</td><td class="accuracy-cell">0</td><td class="accuracy-cell">62.0</td>
+              <td class="tokens-cell">141</td><td class="tokens-cell">137</td><td class="tokens-cell">185</td><td class="tokens-cell">361</td><td class="tokens-cell">141</td><td class="tokens-cell">274</td><td class="tokens-cell">1023</td><td class="tokens-cell">323</td>
+            </tr>
+            <!-- Qwen2.5-7B_SFT+GRPO -->
+            <tr>
+              <td class="model-name-cell" rowspan="2">Qwen2.5-7B<sub>SFT+GRPO</sub></td>
+              <td>1</td>
+              <td class="accuracy-cell">83.1</td><td class="accuracy-cell">82.2</td><td class="accuracy-cell">92.8</td><td class="accuracy-cell">79.4</td><td class="accuracy-cell">93.7</td><td class="accuracy-cell">64.3</td><td class="accuracy-cell">16.7</td><td class="accuracy-cell">73.2</td>
+              <td class="tokens-cell">491</td><td class="tokens-cell">651</td><td class="tokens-cell">739</td><td class="tokens-cell">1410</td><td class="tokens-cell">587</td><td class="tokens-cell">1133</td><td class="tokens-cell">3196</td><td class="tokens-cell">1173</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">83.7</td><td class="accuracy-cell">84.6</td><td class="accuracy-cell">94.8</td><td class="accuracy-cell">84.9</td><td class="accuracy-cell">95.3</td><td class="accuracy-cell">69.3</td><td class="accuracy-cell">20.0</td><td class="accuracy-cell">76.1</td>
+              <td class="tokens-cell">496</td><td class="tokens-cell">625</td><td class="tokens-cell">745</td><td class="tokens-cell">1415</td><td class="tokens-cell">586</td><td class="tokens-cell">943</td><td class="tokens-cell">3723</td><td class="tokens-cell">1261</td>
+            </tr>
+            <!-- ARM-7B -->
+            <tr>
+              <td class="model-name-cell" rowspan="2">ARM-7B</td>
+              <td>1</td>
+              <td class="accuracy-cell">86.1</td><td class="accuracy-cell">84.4</td><td class="accuracy-cell">89.2</td><td class="accuracy-cell">73.9</td><td class="accuracy-cell">92.0</td><td class="accuracy-cell">61.4</td><td class="accuracy-cell">16.7</td><td class="accuracy-cell">72.0</td>
+              <td class="tokens-cell">136</td><td class="tokens-cell">159</td><td class="tokens-cell">305</td><td class="tokens-cell">889</td><td class="tokens-cell">218</td><td class="tokens-cell">401</td><td class="tokens-cell">3253</td><td class="tokens-cell">766</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">85.7</td><td class="accuracy-cell">85.8</td><td class="accuracy-cell">93.7</td><td class="accuracy-cell">82.6</td><td class="accuracy-cell">95.3</td><td class="accuracy-cell">67.9</td><td class="accuracy-cell">20.0</td><td class="accuracy-cell">75.9</td>
+              <td class="tokens-cell">134</td><td class="tokens-cell">154</td><td class="tokens-cell">297</td><td class="tokens-cell">893</td><td class="tokens-cell">189</td><td class="tokens-cell">415</td><td class="tokens-cell">3392</td><td class="tokens-cell">786</td>
+            </tr>
+            <tr class="delta-row">
+              <td colspan="2">Δ</td>
+              <td class="accuracy-cell positive-value">+2.0</td>
+              <td class="accuracy-cell positive-value">+1.2</td>
+              <td class="accuracy-cell negative-value">-1.1</td>
+              <td class="accuracy-cell negative-value">-2.3</td>
+              <td class="accuracy-cell">0</td>
+              <td class="accuracy-cell negative-value">-1.4</td>
+              <td class="accuracy-cell">0</td>
+              <td class="accuracy-cell negative-value">-0.7</td>
+              <td class="tokens-cell positive-value">-73.7%</td>
+              <td class="tokens-cell positive-value">-75.0%</td>
+              <td class="tokens-cell positive-value">-57.9%</td>
+              <td class="tokens-cell positive-value">-49.7%</td>
+              <td class="tokens-cell positive-value">-66.5%</td>
+              <td class="tokens-cell positive-value">-56.0%</td>
+              <td class="tokens-cell positive-value">+7.3%</td>
+              <td class="tokens-cell positive-value">-31.1%</td>
+            </tr>
+            <!-- Qwen2.5-14B -->
+            <tr class="model-row">
+              <td class="model-name-cell" rowspan="2">Qwen2.5-14B</td>
+              <td>1</td>
+              <td class="accuracy-cell">79.9</td><td class="accuracy-cell">83.8</td><td class="accuracy-cell">84.9</td><td class="accuracy-cell">52.7</td><td class="accuracy-cell">84.7</td><td class="accuracy-cell">56.8</td><td class="accuracy-cell">3.3</td><td class="accuracy-cell">63.7</td>
+              <td class="tokens-cell">56</td><td class="tokens-cell">60</td><td class="tokens-cell">132</td><td class="tokens-cell">335</td><td class="tokens-cell">77</td><td class="tokens-cell">139</td><td class="tokens-cell">611</td><td class="tokens-cell">201</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">83.8</td><td class="accuracy-cell">90.2</td><td class="accuracy-cell">92.3</td><td class="accuracy-cell">68.4</td><td class="accuracy-cell">91.7</td><td class="accuracy-cell">67.4</td><td class="accuracy-cell">3.3</td><td class="accuracy-cell">71.0</td>
+              <td class="tokens-cell">55</td><td class="tokens-cell">60</td><td class="tokens-cell">131</td><td class="tokens-cell">325</td><td class="tokens-cell">81</td><td class="tokens-cell">131</td><td class="tokens-cell">735</td><td class="tokens-cell">217</td>
+            </tr>
+            <!-- Qwen2.5-14B_SFT -->
+            <tr>
+              <td class="model-name-cell" rowspan="2">Qwen2.5-14B<sub>SFT</sub></td>
+              <td>1</td>
+              <td class="accuracy-cell">81.8</td><td class="accuracy-cell">88.0</td><td class="accuracy-cell">62.6</td><td class="accuracy-cell">37.4</td><td class="accuracy-cell">84.0</td><td class="accuracy-cell">53.5</td><td class="accuracy-cell">0</td><td class="accuracy-cell">58.2</td>
+              <td class="tokens-cell">155</td><td class="tokens-cell">140</td><td class="tokens-cell">161</td><td class="tokens-cell">276</td><td class="tokens-cell">152</td><td class="tokens-cell">254</td><td class="tokens-cell">527</td><td class="tokens-cell">238</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">85.0</td><td class="accuracy-cell">91.4</td><td class="accuracy-cell">86.4</td><td class="accuracy-cell">48.8</td><td class="accuracy-cell">91.7</td><td class="accuracy-cell">64.4</td><td class="accuracy-cell">3.3</td><td class="accuracy-cell">67.3</td>
+              <td class="tokens-cell">149</td><td class="tokens-cell">141</td><td class="tokens-cell">165</td><td class="tokens-cell">288</td><td class="tokens-cell">140</td><td class="tokens-cell">247</td><td class="tokens-cell">493</td><td class="tokens-cell">232</td>
+            </tr>
+            <!-- Qwen2.5-14B_SFT+GRPO -->
+            <tr>
+              <td class="model-name-cell" rowspan="2">Qwen2.5-14B<sub>SFT+GRPO</sub></td>
+              <td>1</td>
+              <td class="accuracy-cell">85.4</td><td class="accuracy-cell">93.0</td><td class="accuracy-cell">94.8</td><td class="accuracy-cell">81.7</td><td class="accuracy-cell">93.7</td><td class="accuracy-cell">70.5</td><td class="accuracy-cell">20.0</td><td class="accuracy-cell">77.0</td>
+              <td class="tokens-cell">558</td><td class="tokens-cell">531</td><td class="tokens-cell">693</td><td class="tokens-cell">1805</td><td class="tokens-cell">565</td><td class="tokens-cell">945</td><td class="tokens-cell">4031</td><td class="tokens-cell">1304</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">85.8</td><td class="accuracy-cell">94.2</td><td class="accuracy-cell">96.1</td><td class="accuracy-cell">87.1</td><td class="accuracy-cell">95.3</td><td class="accuracy-cell">77.0</td><td class="accuracy-cell">20.0</td><td class="accuracy-cell">79.4</td>
+              <td class="tokens-cell">552</td><td class="tokens-cell">537</td><td class="tokens-cell">696</td><td class="tokens-cell">1810</td><td class="tokens-cell">565</td><td class="tokens-cell">943</td><td class="tokens-cell">3723</td><td class="tokens-cell">1261</td>
+            </tr>
+            <!-- ARM-14B -->
+            <tr>
+              <td class="model-name-cell" rowspan="2">ARM-14B</td>
+              <td>1</td>
+              <td class="accuracy-cell">85.3</td><td class="accuracy-cell">91.8</td><td class="accuracy-cell">92.5</td><td class="accuracy-cell">79.1</td><td class="accuracy-cell">93.3</td><td class="accuracy-cell">66.6</td><td class="accuracy-cell">20.0</td><td class="accuracy-cell">75.5</td>
+              <td class="tokens-cell">146</td><td class="tokens-cell">128</td><td class="tokens-cell">294</td><td class="tokens-cell">903</td><td class="tokens-cell">212</td><td class="tokens-cell">420</td><td class="tokens-cell">3871</td><td class="tokens-cell">853</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td class="accuracy-cell">85.6</td><td class="accuracy-cell">91.8</td><td class="accuracy-cell">96.3</td><td class="accuracy-cell">86.4</td><td class="accuracy-cell">95.7</td><td class="accuracy-cell">72.1</td><td class="accuracy-cell">23.3</td><td class="accuracy-cell">78.7</td>
+              <td class="tokens-cell">145</td><td class="tokens-cell">134</td><td class="tokens-cell">293</td><td class="tokens-cell">910</td><td class="tokens-cell">189</td><td class="tokens-cell">415</td><td class="tokens-cell">3996</td><td class="tokens-cell">869</td>
+            </tr>
+            <tr class="delta-row">
+              <td colspan="2">Δ</td>
+              <td class="accuracy-cell negative-value">-0.2</td>
+              <td class="accuracy-cell negative-value">-2.4</td>
+              <td class="accuracy-cell positive-value">+0.2</td>
+              <td class="accuracy-cell negative-value">-0.7</td>
+              <td class="accuracy-cell">0</td>
+              <td class="accuracy-cell negative-value">-4.9</td>
+              <td class="accuracy-cell">0</td>
+              <td class="accuracy-cell negative-value">-0.7</td>
+              <td class="tokens-cell positive-value">-73.7%</td>
+              <td class="tokens-cell positive-value">-75.0%</td>
+              <td class="tokens-cell positive-value">-57.9%</td>
+              <td class="tokens-cell positive-value">-49.7%</td>
+              <td class="tokens-cell positive-value">-66.5%</td>
+              <td class="tokens-cell positive-value">-56.0%</td>
+              <td class="tokens-cell positive-value">+7.3%</td>
+              <td class="tokens-cell positive-value">-31.1%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="notification is-info is-light mt-3">
+        <p class="has-text-centered">
+          <strong>† denotes in-domain tasks, while ‡ denotes out-of-domain tasks.</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
     
     <div class="columns is-centered mt-6">
       <div class="column is-10">
@@ -871,5 +1468,4 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-
 

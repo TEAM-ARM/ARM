@@ -813,4 +813,74 @@ body {
   .length-answer{
     font-size: 0.9rem;
   }
+}
+
+/* Model Comparison Table Styles */
+.model-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.model-comparison-table th, .model-comparison-table td {
+  padding: 0.4rem;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+.model-comparison-table th {
+  background-color: #f5f5f5;
+  position: sticky;
+  top: 0;
+  z-index: 1; /* Ensure header stays above scrolling content */
+}
+.model-comparison-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+.model-comparison-table tr.model-row {
+  border-top: 2px solid #ccc;
+}
+.model-comparison-table tr.delta-row {
+  border-top: 1px solid #aaa;
+  border-bottom: 2px solid #999;
+  background-color: #f0f0f0; /* Slightly different background for delta row */
+  font-weight: bold;
+}
+.model-comparison-table .accuracy-cell {
+  background-color: rgba(231, 76, 60, 0.03); /* Softer red */
+}
+.model-comparison-table .tokens-cell {
+  background-color: rgba(46, 204, 113, 0.03); /* Softer green */
+}
+.positive-value {
+  color: #27ae60;
+}
+.negative-value {
+  color: #e74c3c;
+}
+.model-name-cell {
+  text-align: left;
+  font-weight: bold;
+  position: sticky;
+  left: 0;
+  background-color: #f9f9f9; /* Match even row or specific color */
+  z-index: 2; /* Ensure model names stay above other cells */
+}
+.model-comparison-table tr:nth-child(even) .model-name-cell {
+  background-color: #f0f0f0;
+}
+.model-comparison-table tr:not(:nth-child(even)) .model-name-cell {
+  background-color: #ffffff; /* Or #f9f9f9 if you prefer */
+}
+
+.section-header {
+  background-color: #eee;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .model-comparison-table {
+    font-size: 0.7rem;
+  }
+  .model-comparison-table th, .model-comparison-table td {
+    padding: 0.3rem;
+  }
 } 
