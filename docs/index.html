@@ -505,7 +505,7 @@
               <table class="model-comparison-table">
                 <thead>
                   <tr>
-                    <th rowspan="3" class="has-text-centered">Models</th>
+                    <th rowspan="3">Models</th>
                     <th rowspan="3" class="has-text-centered">k</th>
                     <th colspan="8" class="has-text-centered">Accuracy (↑)</th>
                     <th colspan="8" class="has-text-centered">Tokens (↓)</th>
@@ -1304,10 +1304,10 @@
                 <thead>
                   <tr>
                     <th rowspan="3">ARM-7B</th>
-                    <th colspan="4">Easy</th>
-                    <th colspan="8">Medium</th>
-                    <th colspan="2">Hard</th>
-                    <th colspan="2" rowspan="2">Avg.</th>
+                    <th colspan="4" class="has-text-centered">Easy</th>
+                    <th colspan="8" class="has-text-centered">Medium</th>
+                    <th colspan="2" class="has-text-centered">Hard</th>
+                    <th colspan="2" rowspan="2" class="has-text-centered">Avg.</th>
                   </tr>
                   <tr>
                     <th colspan="2">CSQA†</th>
@@ -1506,7 +1506,7 @@
                     <h5 class="title is-5">Accuracy comparison between ARM's <strong>Adaptive</strong> and <strong>Instruction-Guided</strong> modes.</h5>
                   </div>
                   <div class="has-text-centered mb-3">
-                    <img src="static/images/040_ada_vs_inst.png" alt="Accuracy comparison between ARM's Adaptive and Instruction-Guided modes." style="max-width: 80%; height: auto; margin: 0 auto; display: block;">
+                    <img src="static/images/040_ada_vs_inst.png" alt="Accuracy comparison between ARM's Adaptive and Instruction-Guided modes." style="max-width: 50%; height: auto; margin: 0 auto; display: block;">
                   </div>
                   <div class="content mt-2 has-text-justified">
                     <div class="notification is-info is-light">
@@ -1560,7 +1560,7 @@
 
                 <div id="comparison_arm_length_penalty" class="analysis-content-item" style="display: none;">
                   <div class="has-text-centered mb-4">
-                    <h5 class="title is-5">Relative accuracy and token usage of different models compared to their backbone models on CSQA. "L1" denotes L1-Exact, and "TP" denotes ThinkPrune.</h5>
+                    <h5 class="title is-5">Relative accuracy and token usage of different models compared to their backbone models on CSQA.</h5>
                   </div>
                   <div class="has-text-centered mb-3">
                     <img src="static/images/050_length_penalty.png" alt="Relative accuracy and token usage of different models compared to their backbone models on CSQA. &quot;L1&quot; denotes L1-Exact, and &quot;TP&quot; denotes ThinkPrune." style="max-width: 50%; height: auto; margin: 0 auto; display: block;">
@@ -1569,7 +1569,7 @@
                     <div class="notification is-info is-light">
                         <p class="has-text-centered"><strong>Key Takeaways:</strong></p>
                         <ul>
-                            <li><strong>ARM vs. L1 & ThinkPrune on CSQA:</strong> When evaluated on the CSQA dataset (an easier task), both L1 and ThinkPrune show performance drops when using their officially specified minimum lengths. In contrast, ARM (using the same DS-R1-Distill backbone for a fair comparison) maintains strong performance while using relatively fewer tokens, demonstrating its superior ability to balance reasoning efficiency and effectiveness.</li>
+                            <li><strong>ARM vs. L1 & ThinkPrune (TP) on CSQA:</strong> When evaluated on the CSQA dataset (an easier task), both L1 and ThinkPrune show performance drops when using their officially specified minimum lengths. In contrast, ARM (using the same DS-R1-Distill backbone for a fair comparison) maintains strong performance while using relatively fewer tokens, demonstrating its superior ability to balance reasoning efficiency and effectiveness.</li>
                         </ul>
                     </div>
                   </div>
