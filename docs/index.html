@@ -114,7 +114,7 @@
             <a href="https://ykzhang721.github.io/">Yikai Zhang</a><sup style="color:#6fbf73;">1</sup>,
           </span>
           <span class="author-block">
-            <a href="https://scholar.google.com/citations?user=0l2j2ygAAAAJ">Aili Chen</a><sup
+            <a href="https://scholar.google.com/citations?user=FAJzMAQAAAAJ">Aili Chen</a><sup
               style="color:#6fbf73;">1</sup>,
           </span>
           <span class="author-block">
@@ -381,8 +381,7 @@
                         <p class="is-family-monospace p-2 has-background-light">
                           \( r_i' = \alpha_i(t) \cdot r_i \)
                         </p>
-                        <p>where \( r_i \) is the original binary reward and \( \alpha_i(t) \) is the format diversity
-                          scaling factor.</p>
+                        <p>where \( r_i \) is the original binary reward and \( \alpha_i(t) \) is the scaling factor.</p>
                       </div>
                       <div class="column is-narrow">
                         <div class="box has-background-light has-text-centered">
@@ -483,7 +482,7 @@
           <div class="box">
             <h3 class="title is-4 has-text-centered mb-4">Detailed Model Performance Comparison</h3>
 
-            <p class="content has-text-centered mb-4">
+            <p class="content has-text-left mb-4">
               Performance of various models across evaluation datasets. "Tokens" refers to the token cost for each model
               on each dataset. For each model, k=1 corresponds to pass@1, and k=8 corresponds to maj@8. When k=8, the
               token cost is averaged over a single output. † denotes in-domain tasks, while ‡ denotes out-of-domain
@@ -506,20 +505,20 @@
               <table class="model-comparison-table">
                 <thead>
                   <tr>
-                    <th rowspan="3">Models</th>
-                    <th rowspan="3">k</th>
-                    <th colspan="8">Accuracy (↑)</th>
-                    <th colspan="8">Tokens (↓)</th>
+                    <th rowspan="3" class="has-text-centered">Models</th>
+                    <th rowspan="3" class="has-text-centered">k</th>
+                    <th colspan="8" class="has-text-centered">Accuracy (↑)</th>
+                    <th colspan="8" class="has-text-centered">Tokens (↓)</th>
                   </tr>
                   <tr>
-                    <th colspan="2">Easy</th>
-                    <th colspan="4">Medium</th>
-                    <th>Hard</th>
-                    <th rowspan="2">Avg.</th>
-                    <th colspan="2">Easy</th>
-                    <th colspan="4">Medium</th>
-                    <th>Hard</th>
-                    <th rowspan="2">Avg.</th>
+                    <th colspan="2" class="has-text-centered">Easy</th>
+                    <th colspan="4" class="has-text-centered">Medium</th>
+                    <th class="has-text-centered">Hard</th>
+                    <th rowspan="2" class="has-text-centered">Avg.</th>
+                    <th colspan="2" class="has-text-centered">Easy</th>
+                    <th colspan="4" class="has-text-centered">Medium</th>
+                    <th class="has-text-centered">Hard</th>
+                    <th rowspan="2" class="has-text-centered">Avg.</th>
                   </tr>
                   <tr>
                     <th>CSQA†</th>
@@ -1016,9 +1015,9 @@
                     <td class="tokens-cell">745</td>
                     <td class="tokens-cell">1415</td>
                     <td class="tokens-cell">586</td>
-                    <td class="tokens-cell">943</td>
-                    <td class="tokens-cell">3723</td>
-                    <td class="tokens-cell">1261</td>
+                    <td class="tokens-cell">1135</td>
+                    <td class="tokens-cell">3145</td>
+                    <td class="tokens-cell">1164</td>
                   </tr>
                   <!-- ARM-7B -->
                   <tr>
@@ -1055,8 +1054,8 @@
                     <td class="tokens-cell">154</td>
                     <td class="tokens-cell">297</td>
                     <td class="tokens-cell">893</td>
-                    <td class="tokens-cell">189</td>
-                    <td class="tokens-cell">415</td>
+                    <td class="tokens-cell">218</td>
+                    <td class="tokens-cell">413</td>
                     <td class="tokens-cell">3392</td>
                     <td class="tokens-cell">786</td>
                   </tr>
@@ -1069,15 +1068,15 @@
                     <td class="accuracy-cell">0</td>
                     <td class="accuracy-cell negative-value">-1.4</td>
                     <td class="accuracy-cell">0</td>
-                    <td class="accuracy-cell negative-value">-0.7</td>
-                    <td class="tokens-cell positive-value">-73.7%</td>
-                    <td class="tokens-cell positive-value">-75.0%</td>
-                    <td class="tokens-cell positive-value">-57.9%</td>
-                    <td class="tokens-cell positive-value">-49.7%</td>
-                    <td class="tokens-cell positive-value">-66.5%</td>
-                    <td class="tokens-cell positive-value">-56.0%</td>
-                    <td class="tokens-cell positive-value">+7.3%</td>
-                    <td class="tokens-cell positive-value">-31.1%</td>
+                    <td class="accuracy-cell negative-value">-0.2</td>
+                    <td class="tokens-cell positive-value">-73.0%</td>
+                    <td class="tokens-cell positive-value">-75.4%</td>
+                    <td class="tokens-cell positive-value">-60.1%</td>
+                    <td class="tokens-cell positive-value">-36.9%</td>
+                    <td class="tokens-cell positive-value">-62.8%</td>
+                    <td class="tokens-cell positive-value">-63.6%</td>
+                    <td class="tokens-cell negative-value">+7.9%</td>
+                    <td class="tokens-cell positive-value">-32.5%</td>
                   </tr>
                   <!-- Qwen2.5-14B -->
                   <tr class="model-row">
@@ -1245,9 +1244,9 @@
                     <td class="accuracy-cell negative-value">-2.4</td>
                     <td class="accuracy-cell positive-value">+0.2</td>
                     <td class="accuracy-cell negative-value">-0.7</td>
-                    <td class="accuracy-cell">0</td>
+                    <td class="accuracy-cell positive-value">+0.4</td>
                     <td class="accuracy-cell negative-value">-4.9</td>
-                    <td class="accuracy-cell">0</td>
+                    <td class="accuracy-cell positive-value">+3.3</td>
                     <td class="accuracy-cell negative-value">-0.7</td>
                     <td class="tokens-cell positive-value">-73.7%</td>
                     <td class="tokens-cell positive-value">-75.0%</td>
@@ -1255,7 +1254,7 @@
                     <td class="tokens-cell positive-value">-49.7%</td>
                     <td class="tokens-cell positive-value">-66.5%</td>
                     <td class="tokens-cell positive-value">-56.0%</td>
-                    <td class="tokens-cell positive-value">+7.3%</td>
+                    <td class="tokens-cell negative-value">+7.3%</td>
                     <td class="tokens-cell positive-value">-31.1%</td>
                   </tr>
                 </tbody>
@@ -1564,7 +1563,7 @@
                     <h5 class="title is-5">Relative accuracy and token usage of different models compared to their backbone models on CSQA. "L1" denotes L1-Exact, and "TP" denotes ThinkPrune.</h5>
                   </div>
                   <div class="has-text-centered mb-3">
-                    <img src="static/images/050_length_penalty.png" alt="Relative accuracy and token usage of different models compared to their backbone models on CSQA. &quot;L1&quot; denotes L1-Exact, and &quot;TP&quot; denotes ThinkPrune." style="max-width: 80%; height: auto; margin: 0 auto; display: block;">
+                    <img src="static/images/050_length_penalty.png" alt="Relative accuracy and token usage of different models compared to their backbone models on CSQA. &quot;L1&quot; denotes L1-Exact, and &quot;TP&quot; denotes ThinkPrune." style="max-width: 50%; height: auto; margin: 0 auto; display: block;">
                   </div>
                   <div class="content mt-2 has-text-justified">
                     <div class="notification is-info is-light">
