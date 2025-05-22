@@ -11,7 +11,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/verl" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -39,7 +39,6 @@
     "WebServerToolWindowPanel.toolwindow.show.date": "false",
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -237,6 +236,10 @@
       <workItem from="1747811320810" duration="28319000" />
       <workItem from="1747876981481" duration="9154000" />
       <workItem from="1747895000456" duration="29933000" />
+      <workItem from="1747931587852" duration="1861000" />
+      <workItem from="1747933723253" duration="334000" />
+      <workItem from="1747934067536" duration="15000" />
+      <workItem from="1747934118985" duration="157000" />
     </task>
     <servers />
   </component>
