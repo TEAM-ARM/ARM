@@ -1,0 +1,56 @@
+export N_GPUS=4
+export BASE_MODEL=/path/to/model
+export DATA_DIR=/path/to/ARM/verl/data/parquet
+export ROLLOUT_TP_SIZE=4
+export CUDA_VISIBLE_DEVICES=0,1,2,3
+export EXPERIMENT_NAME=test_arm
+export VLLM_ATTENTION_BACKEND=XFORMERS
+
+gsm8k_train_path=$DATA_DIR/gsm8k_train.parquet
+gsm8k_test_path=$DATA_DIR/gsm8k_test.parquet
+csqa_train_path=$DATA_DIR/csqa_train.parquet
+csqa_test_path=$DATA_DIR/csqa_test.parquet
+MATH_train_path=$DATA_DIR/MATH_train.parquet
+MATH_test_path=$DATA_DIR/MATH_test.parquet
+
+train_files="['$gsm8k_train_path', '$MATH_train_path', '$csqa_train_path']"
+test_files="['$gsm8k_test_path', '$MATH_test_path', '$csqa_test_path']"
+
+python3 -m verl.trainer.my_ppo \
+    algorithm.adv_estimator=ada_grpo \
+    data.train_files="$train_files" \
+    data.val_files="$test_files" \
+    data.train_batch_size=1024 \
+    data.val_batch_size=1312 \
+    data.max_prompt_length=2048 \
+    data.max_response_length=4096 \
+    actor_rollout_ref.model.path=$BASE_MODEL \
+    actor_rollout_ref.actor.optim.lr=1e-6 \
+    actor_rollout_ref.model.use_remove_padding=True \
+    actor_rollout_ref.actor.ppo_mini_batch_size=180 \
+    actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=30 \
+    actor_rollout_ref.actor.use_kl_loss=True \
+    actor_rollout_ref.actor.kl_loss_coef=0.001 \
+    actor_rollout_ref.actor.kl_loss_type=low_var_kl \
+    actor_rollout_ref.actor.use_dynamic_bsz=True \
+    actor_rollout_ref.model.enable_gradient_checkpointing=True \
+    actor_rollout_ref.actor.fsdp_config.param_offload=False \
+    actor_rollout_ref.actor.fsdp_config.grad_offload=False \
+    actor_rollout_ref.actor.fsdp_config.optimizer_offload=False \
+    actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=120 \
+    actor_rollout_ref.rollout.tensor_model_parallel_size=$ROLLOUT_TP_SIZE \
+    actor_rollout_ref.rollout.name=vllm \
+    actor_rollout_ref.rollout.gpu_memory_utilization=0.7 \
+    actor_rollout_ref.rollout.n=8 \
+    actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=120 \
+    actor_rollout_ref.ref.fsdp_config.param_offload=True \
+    algorithm.kl_ctrl.kl_coef=0.001 \
+    trainer.critic_warmup=0 \
+    trainer.logger=['wandb','console'] \
+    trainer.project_name='arm' \
+    trainer.experiment_name=$EXPERIMENT_NAME \
+    trainer.n_gpus_per_node=$N_GPUS \
+    trainer.nnodes=1 \
+    trainer.save_freq=25 \
+    trainer.test_freq=25 \
+    trainer.total_epochs=9 $@

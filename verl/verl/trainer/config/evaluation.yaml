@@ -1,0 +1,10 @@
+data:
+  path: /tmp/math_Qwen2-7B-Instruct.parquet
+  tokenizer_path: /tokenizer.json
+  prompt_key: prompt
+  response_key: responses
+  data_source_key: data_source
+  reward_model_key: reward_model
+  cons: 8
+  temp: 0.7
+  samples: 32
