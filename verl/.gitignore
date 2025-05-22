@@ -1,5 +1,5 @@
 /examples
-/scripts
+#/scripts
 /my_scripts
 /checkpoints
 /parquet_data
