@@ -6,7 +6,7 @@ ARM—Adaptive Reasoning Model, a reasoning model capable of adaptively selectin
 </p>
 
 ## Environments
-This repository contains the codebase for SFT and RL using [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) and [VeRL](https://github.com/volcengine/verl).
+This repository contains the codebase for SFT and RL based on [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) and [VeRL](https://github.com/volcengine/verl) **(Both of these repositories are adapted from official GitHub sources, and no author information from this paper is included)**.
 We use two separate conda environments for each stage:
 ```bash
 # SFT
@@ -26,11 +26,14 @@ pip3 install flash-attn --no-build-isolation
 conda activate arm_llama_factory
 cd LLaMA-Factory
 ```
+Make sure to specify the correct model path in the `.yaml` file.
+
 ### Train
 ```bash
 CUDA_VISIBLE_DEVICES=0,1,2,3 llamafactory-cli train stage1_scripts/qwen2.5_7b/train.yaml
 ```
 ### Merge
+
 ```bash
 llamafactory-cli export stage1_scripts/qwen2.5_7b/merge.yaml
 ```
@@ -41,6 +44,7 @@ llamafactory-cli export stage1_scripts/qwen2.5_7b/merge.yaml
 conda activate arm_verl
 cd verl
 ```
+Make sure to specify the correct model and data path in the `.sh` file.
 ### Train
 ```bash
 bash stage2_scripts/trainer/run.sh
