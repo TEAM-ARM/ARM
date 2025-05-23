@@ -1,6 +1,9 @@
 # ARM: Adaptive Reasoning Model
 ARM—Adaptive Reasoning Model, a reasoning model capable of adaptively selecting appropriate reasoning formats based on the task at hand.
-![1](images/000_ARM.jpg)
+
+<p align="center">
+<img src="images/000_ARM.jpg" alt="ARM" style="width: 90%;">
+</p>
 
 ## Environments
 This repository contains the codebase for training and evaluating using [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) (SFT) and [VeRL](https://github.com/volcengine/verl) (RL).
