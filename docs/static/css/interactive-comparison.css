@@ -94,4 +94,27 @@
 
 #instruction-mode-selector {
     width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .comparison-body {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .comparison-column {
+    min-height: 300px;
+  }
+  
+  .response-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .meta-right {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
 } 

@@ -978,4 +978,33 @@ body {
   align-items: center;
   gap: 16px;
   margin-left: 16px;
+}
+
+@media screen and (max-width: 768px) {
+  .comparison-body {
+    flex-direction: column;
+  }
+  
+  .comparison-column {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .comparison-column:first-child {
+    margin-right: 0;
+  }
+  
+  .comparison-column:last-child {
+    margin-bottom: 0;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .method-step .is-family-monospace,
+  .method-step .has-background-light {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+    max-width: 100%;
+  }
 } 
