@@ -1,0 +1,97 @@
+.comparison-container {
+    margin-top: 2rem;
+}
+
+.comparison-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.comparison-body {
+    display: flex;
+    gap: 2rem;
+}
+
+.comparison-column {
+    flex: 1;
+    padding: 1.5rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    min-height: 400px;
+}
+
+.response-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.correct-tag {
+    color: #48c774;
+    font-weight: bold;
+}
+
+.incorrect-tag {
+    color: #f14668;
+    font-weight: bold;
+}
+
+.reasoning-sample {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+    font-family: monospace;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.response-details {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.token-counter {
+    margin-bottom: 0.5rem;
+}
+
+.format-info {
+    font-style: italic;
+}
+
+.loader {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+}
+
+.loader.is-hidden {
+    display: none;
+}
+
+.problem-display {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.problem-display.is-hidden {
+    display: none;
+}
+
+.comparison-container.is-hidden {
+    display: none;
+}
+
+.selector-container {
+    margin-bottom: 2rem;
+}
+
+#instruction-mode-selector {
+    width: 100%;
+} 

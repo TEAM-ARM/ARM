@@ -192,23 +192,20 @@
             <div class="control">
               <div class="select is-fullwidth">
                 <select id="dataset-selector">
-                  <option value="aime">AIME</option>
-                  <option value="math">MATH</option>
-                  <option value="amc">AMC</option>
-                  <option value="olympiad">OLYMPIAD-BENCH</option>
+                  <!-- 选项将由JavaScript动态添加 -->
                 </select>
               </div>
             </div>
           </div>
         </div>
         
-        <!-- First Model Selection -->
+        <!-- Model Selection -->
         <div class="column is-4">
           <div class="field">
-            <label class="label">Model 1</label>
+            <label class="label">Model</label>
             <div class="control">
               <div class="select is-fullwidth">
-                <select id="model1-selector">
+                <select id="model-selector">
                   <option value="LCPO-Exact">LCPO-Exact</option>
                   <option value="LCPO-Max">LCPO-Max</option>
                 </select>
@@ -217,59 +214,26 @@
           </div>
         </div>
         
-        <!-- First Token Length Selection -->
+        <!-- Instruction Mode Selection -->
         <div class="column is-4">
           <div class="field">
-            <label class="label">Token Length 1</label>
+            <label class="label">Instruction Mode</label>
             <div class="control">
               <div class="select is-fullwidth">
-                <select id="token1-selector">
-                  <option value="512">512 tokens</option>
-                  <option value="1024">1024 tokens</option>
-                  <option value="2048">2048 tokens</option>
-                  <option value="3600">3600 tokens</option>
+                <select id="instruction-mode-selector">
+                  <option value="inst_direct">Direct</option>
+                  <option value="inst_cot">Chain of Thought</option>
+                  <option value="inst_code">Code</option>
+                  <option value="inst_long_cot">Long Chain of Thought</option>
                 </select>
               </div>
             </div>
           </div>
         </div>
         
-        <!-- Second Model Selection -->
-        <div class="column is-4">
+        <!-- Load Random Button -->
+        <div class="column is-12">
           <div class="field">
-            <label class="label">Model 2</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select id="model2-selector">
-                  <option value="LCPO-Exact">LCPO-Exact</option>
-                  <option value="LCPO-Max" selected>LCPO-Max</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Second Token Length Selection -->
-        <div class="column is-4">
-          <div class="field">
-            <label class="label">Token Length 2</label>
-            <div class="control">
-              <div class="select is-fullwidth">
-                <select id="token2-selector">
-                  <option value="512">512 tokens</option>
-                  <option value="1024" selected>1024 tokens</option>
-                  <option value="2048">2048 tokens</option>
-                  <option value="3600">3600 tokens</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Load Button -->
-        <div class="column is-4">
-          <div class="field">
-            <label class="label">&nbsp;</label>
             <div class="control">
               <button id="load-random-btn" class="button is-primary is-fullwidth">
                 <span class="icon">
@@ -284,58 +248,56 @@
     </div>
     
     <!-- Loader -->
-    <div class="loader" id="loader"></div>
+    <div id="loader" class="loader"></div>
     
     <!-- Problem Display -->
-    <div class="problem-display is-hidden" id="problem-container">
-      <h3 class="title is-5" id="problem-title">Problem</h3>
-      <div class="content" id="problem-text">
-        Select a dataset and click "Load Random Example" to see a problem.
+    <div id="problem-container" class="problem-display is-hidden">
+      <h3 id="problem-title" class="title is-4">Problem</h3>
+      <p id="problem-text" class="subtitle is-5"></p>
+      <div class="tags">
+        <span class="tag is-info">Correct Answer: <span id="correct-answer"></span></span>
+        <span class="tag is-light">Example #<span id="problem-id"></span></span>
       </div>
     </div>
     
     <!-- Comparison Display -->
-    <div class="comparison-container is-hidden" id="comparison-container">
-      <div class="comparison-header">
-        <h3 class="title is-5">Model Comparison</h3>
-        <div>
-          <span class="tag is-primary" id="problem-id">Example #123</span>
-        </div>
-      </div>
-      
-      <div class="comparison-body">
-        <!-- First Model Response -->
-        <div class="comparison-column" id="response1-column">
-          <div class="response-meta">
-            <h5 class="subtitle is-6" id="model1-title">LCPO-Exact (512 tokens)</h5>
-            <span id="model1-correct" class="is-hidden correct-tag">
-              <i class="fas fa-check"></i> Correct
-            </span>
-            <span id="model1-incorrect" class="is-hidden incorrect-tag">
-              <i class="fas fa-times"></i> Incorrect
-            </span>
+    <div id="comparison-container" class="comparison-container is-hidden">
+      <div class="columns">
+        <!-- Adaptive Response -->
+        <div class="column is-6">
+          <div class="comparison-column" id="adaptive-column">
+            <div class="response-meta" style="display: flex; align-items: center; gap: 8px;">
+              <span id="adaptive-token-count" class="token-counter"></span>
+              <span id="adaptive-correct" class="tag is-success is-hidden">Correct</span>
+              <span id="adaptive-incorrect" class="tag is-danger is-hidden">Incorrect</span>
+            </div>
+            <div class="reasoning-sample" id="adaptive-text"></div>
+            <div class="token-counter" id="adaptive-format"></div>
           </div>
-          <div class="reasoning-sample" id="response1-text">
-            Select options and load a random example to see the model response.
-          </div>
-          <p class="token-counter" id="token1-counter">0 tokens</p>
         </div>
         
-        <!-- Second Model Response -->
-        <div class="comparison-column" id="response2-column">
-          <div class="response-meta">
-            <h5 class="subtitle is-6" id="model2-title">LCPO-Max (1024 tokens)</h5>
-            <span id="model2-correct" class="is-hidden correct-tag">
-              <i class="fas fa-check"></i> Correct
-            </span>
-            <span id="model2-incorrect" class="is-hidden incorrect-tag">
-              <i class="fas fa-times"></i> Incorrect
-            </span>
+        <!-- Instruction Mode Response -->
+        <div class="column is-6">
+          <div class="comparison-column" id="instruction-column">
+            <div class="response-meta" style="display: flex; align-items: center; gap: 8px;">
+              <span id="instruction-token-count" class="token-counter"></span>
+              <span id="instruction-correct" class="tag is-success is-hidden">Correct</span>
+              <span id="instruction-incorrect" class="tag is-danger is-hidden">Incorrect</span>
+              <div style="flex: 1"></div>
+              <div>
+                <label for="instruction-mode-selector" class="label" style="margin-bottom: 0;">Instruction Mode</label>
+                <div class="select is-small">
+                  <select id="instruction-mode-selector">
+                    <option value="inst_direct">Direct</option>
+                    <option value="inst_cot">Chain of Thought</option>
+                    <option value="inst_code">Code</option>
+                    <option value="inst_long_cot">Long Chain of Thought</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="reasoning-sample" id="instruction-text"></div>
           </div>
-          <div class="reasoning-sample" id="response2-text">
-            Select options and load a random example to see the model response.
-          </div>
-          <p class="token-counter" id="token2-counter">0 tokens</p>
         </div>
       </div>
     </div>
@@ -359,7 +321,7 @@
   </div>
 </footer>
 
-<!-- JavaScript for interactive comparison -->
+<!-- Load JavaScript -->
 <script src="static/js/interactive-comparison.js"></script>
 
 </body>

@@ -1603,10 +1603,28 @@
                     <div class="control">
                       <div class="select is-fullwidth">
                         <select id="dataset-selector">
-                          <option value="aime" selected>AIME</option>
-                          <option value="math">MATH</option>
-                          <option value="amc">AMC</option>
-                          <option value="olympiad_bench">OLYMPIAD-BENCH</option>
+                          <option value="csqa" selected>CSQA (Easy)</option>
+                          <option value="obqa">OBQA (Easy)</option>
+                          <option value="gsm8k">GSM8K (Medium)</option>
+                          <option value="math">MATH (Medium)</option>
+                          <option value="svamp">SVAMP (Medium)</option>
+                          <option value="bbh">BBH (Medium)</option>
+                          <option value="aime">AIME'25 (Hard)</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Model Selector -->
+                <div class="column is-4">
+                  <div class="field">
+                    <label class="label">Model</label>
+                    <div class="control">
+                      <div class="select is-fullwidth">
+                        <select id="model-selector">
+                          <option value="3b">ARM-3B</option>
+                          <option value="7b">ARM-7B</option>
+                          <option value="14b" selected>ARM-14B</option>
                         </select>
                       </div>
                     </div>
@@ -1614,7 +1632,7 @@
                 </div>
 
                 <!-- Load Button -->
-                <div class="column is-4 is-offset-4">
+                <div class="column is-4">
                   <div class="field">
                     <label class="label">&nbsp;</label>
                     <div class="control">
@@ -1654,113 +1672,79 @@
               </div>
 
               <div class="comparison-body">
-                <!-- First Model Response -->
-                <div class="comparison-column" id="response1-column">
-                  <div class="selector-row columns is-mobile mb-3">
-                    <!-- First Model Selection -->
-                    <div class="column is-6">
-                      <div class="field">
-                        <label class="label is-small">Model 1</label>
-                        <div class="control">
-                          <div class="select is-small is-fullwidth">
-                            <select id="model1-selector">
-                              <option value="L1-Exact">L1-Exact</option>
-                              <option value="L1-Max">L1-Max</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- First Token Length Selection -->
-                    <div class="column is-6">
-                      <div class="field">
-                        <label class="label is-small">Token Length</label>
-                        <div class="control">
-                          <div class="select is-small is-fullwidth">
-                            <select id="token1-selector">
-                              <option value="512">512 tokens</option>
-                              <option value="1024">1024 tokens</option>
-                              <option value="2048">2048 tokens</option>
-                              <option value="3600">3600 tokens</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
+                <!-- Left Column: Adaptive Response -->
+                <div class="comparison-column" id="adaptive-column">
                   <div class="response-meta">
-                    <h5 class="subtitle is-6" id="model1-title">L1-Exact (512 tokens)</h5>
-                    <span id="model1-correct" class="is-hidden correct-tag">
-                      <i class="fas fa-check"></i> Correct
-                    </span>
-                    <span id="model1-incorrect" class="is-hidden incorrect-tag">
-                      <i class="fas fa-times"></i> Incorrect
-                    </span>
+                    <div class="meta-left">
+                      <h5 class="subtitle is-6">Adaptive Mode</h5>
+                      <div class="meta-vertical-group">
+                        <p class="format-info" id="adaptive-format" style="margin-bottom:0;">Format: -</p>
+                        <p class="token-counter" id="adaptive-token-count" style="margin-bottom:0;">0 tokens</p>
+                      </div>
+                    </div>
+                    <div class="meta-right">
+                      <span id="adaptive-correct" class="is-hidden correct-tag">
+                        <i class="fas fa-check"></i> Correct
+                      </span>
+                      <span id="adaptive-incorrect" class="is-hidden incorrect-tag">
+                        <i class="fas fa-times"></i> Incorrect
+                      </span>
+                    </div>
                   </div>
-                  <div class="reasoning-sample" id="response1-text">
+                  <div class="reasoning-sample" id="adaptive-text">
                     Select options and load a random example to see the model response.
                   </div>
-                  <p class="token-counter" id="token1-counter">0 tokens</p>
+                  <!-- <div class="response-details mt-3">
+                    <p class="format-info" id="adaptive-format">Format: -</p>
+                  </div> -->
                 </div>
 
-                <!-- Second Model Response -->
-                <div class="comparison-column" id="response2-column">
-                  <div class="selector-row columns is-mobile mb-3">
-                    <!-- Second Model Selection -->
-                    <div class="column is-6">
-                      <div class="field">
-                        <label class="label is-small">Model 2</label>
-                        <div class="control">
-                          <div class="select is-small is-fullwidth">
-                            <select id="model2-selector">
-                              <option value="L1-Exact">L1-Exact</option>
-                              <option value="L1-Max" selected>L1-Max</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Second Token Length Selection -->
-                    <div class="column is-6">
-                      <div class="field">
-                        <label class="label is-small">Token Length</label>
-                        <div class="control">
-                          <div class="select is-small is-fullwidth">
-                            <select id="token2-selector">
-                              <option value="512">512 tokens</option>
-                              <option value="1024">1024 tokens</option>
-                              <option value="2048">2048 tokens</option>
-                              <option value="3600" selected>3600 tokens</option>
-                            </select>
-                          </div>
+                <!-- Right Column: Instruction-Guided Response -->
+                <div class="comparison-column" id="instruction-column">
+                  <div class="selector-row mb-3">
+                    <div class="field">
+                      <label class="label is-small">Instruction-Guided Mode</label>
+                      <div class="control">
+                        <div class="select is-fullwidth">
+                          <select id="instruction-mode-selector">
+                            <option value="inst_direct">Direct</option>
+                            <option value="inst_cot">Short CoT</option>
+                            <option value="inst_code">Code</option>
+                            <option value="inst_long_cot">Long CoT</option>
+                          </select>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   <div class="response-meta">
-                    <h5 class="subtitle is-6" id="model2-title">L1-Max (3600 tokens)</h5>
-                    <span id="model2-correct" class="is-hidden correct-tag">
-                      <i class="fas fa-check"></i> Correct
-                    </span>
-                    <span id="model2-incorrect" class="is-hidden incorrect-tag">
-                      <i class="fas fa-times"></i> Incorrect
-                    </span>
+                    <div class="meta-left">
+                      <h5 class="subtitle is-6" id="instruction-title">Instruction-Guided Mode</h5>
+                      <div class="meta-vertical-group">
+                        <p class="token-counter" id="instruction-token-count" style="margin-bottom:0;">0 tokens</p>
+                      </div>
+                    </div>
+                    <div class="meta-right">
+                      <span id="instruction-correct" class="is-hidden correct-tag">
+                        <i class="fas fa-check"></i> Correct
+                      </span>
+                      <span id="instruction-incorrect" class="is-hidden incorrect-tag">
+                        <i class="fas fa-times"></i> Incorrect
+                      </span>
+                    </div>
                   </div>
-                  <div class="reasoning-sample" id="response2-text">
+                  <div class="reasoning-sample" id="instruction-text">
                     Select options and load a random example to see the model response.
                   </div>
-                  <p class="token-counter" id="token2-counter">0 tokens</p>
+                  <div class="response-details mt-3">
+                  </div>
                 </div>
               </div>
             </div>
 
             <div class="notification is-primary is-light mt-4">
               <p class="has-text-centered">
-                <strong>Compare how L1 models perform with different token constraints and control strategies.</strong>
+                <strong>Compare how ARM performs in adaptive mode versus different instruction-guided modes.</strong>
               </p>
             </div>
           </div>
