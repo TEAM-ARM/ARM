@@ -575,7 +575,7 @@ body {
 .meta-vertical-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 30px;
 }
 .meta-right {
   display: flex;
