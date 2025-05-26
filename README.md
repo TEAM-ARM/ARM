@@ -17,6 +17,9 @@ ARM—Adaptive Reasoning Model, a reasoning model capable of adaptively selectin
 <img src="images/000_ARM.jpg" alt="ARM" style="width: 90%;">
 </p>
 
+## Updates
+
+- 2025/05/27: Thrilled to release [ARM](https://team-arm.github.io/arm/): A reasoning model capable of adaptively selecting reasoning formats based on the task, achieving a better trade-off between effectiveness and efficiency!
 
 ## Data & Model
 You can download our dataset and model from [🤗HuggingFace](https://huggingface.co/arm-team).
