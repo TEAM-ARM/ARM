@@ -92,3 +92,24 @@ bash stage2_scripts/evaluation/run.sh
 
 ## 🔍Roadmap
 [Work in Progress] Stay tuned!
+
+
+## Contact
+
+If you have any problems, please contact 
+[Siye Wu](mailto:siyewu24@m.fudan.edu.cn),
+[Jian Xie](mailto:jianx0321@gmail.com),
+
+## Citation Information
+
+If our paper or related resources prove valuable to your research, we kindly ask for a citation. 
+
+<a href="https://github.com/TEAM-ARM/ARM"><img src="https://img.shields.io/github/stars/TEAM-ARM/ARM?style=social&label=ARM" alt="GitHub Stars"></a>
+
+```
+@misc{wu2025arm,
+  title={ARM: Adaptive Reasoning Model},
+  author={Siye Wu, Jian Xie, Yikai Zhang, Aili Chen, Kai Zhang, Yu Su, Yanghua Xiao},
+  year={2025}
+}
+```
