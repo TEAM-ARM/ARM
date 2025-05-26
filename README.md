@@ -1,9 +1,25 @@
-# ARM: Adaptive Reasoning Model
-ARM—Adaptive Reasoning Model, a reasoning model capable of adaptively selecting appropriate reasoning formats based on the task at hand.
+<div align=center>
+<img src="images/010_logo.png" width="120px">
+</div>
+<h1 align="center"> ARM: Adaptive Reasoning Model</h1>
 
+
+<div align="center"> 
+
+[![Paper](https://img.shields.io/badge/Paper-arXiv-b5212f.svg?logo=arxiv)](https://arxiv.org/)
+[![Website](https://img.shields.io/badge/Website-ARM-f37024.svg)](https://team-arm.github.io/arm/) 
+[![HuggingFace](https://img.shields.io/badge/Data&Model-HuggingFace-ffd21e.svg?logo=huggingface)](https://huggingface.co/arm-team) 
+
+</div>
+
+ARM—Adaptive Reasoning Model, a reasoning model capable of adaptively selecting appropriate reasoning formats based on the task at hand.
 <p align="center">
 <img src="images/000_ARM.jpg" alt="ARM" style="width: 90%;">
 </p>
+
+
+## Data & Model
+You can download our dataset and model from [🤗HuggingFace](https://huggingface.co/arm-team).
 
 ## Environments
 This repository contains the codebase for SFT and RL based on [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) and [VeRL](https://github.com/volcengine/verl).
@@ -73,3 +89,6 @@ bash stage2_scripts/generation/instruction_guided_run.sh
 ```bash
 bash stage2_scripts/evaluation/run.sh
 ```
+
+## 🔍Roadmap
+[Work in Progress] Stay tuned!
