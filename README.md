@@ -14,7 +14,9 @@
 
 ARM—Adaptive Reasoning Model, a reasoning model capable of adaptively selecting appropriate reasoning formats based on the task at hand.
 
-![Demo Video GIF](images/flash.gif)
+<div align=center>
+<img src="images/010_logo.png" width="120px">
+</div>
 
 
 ## Updates
