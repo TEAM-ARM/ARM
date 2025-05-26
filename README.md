@@ -6,7 +6,7 @@ ARM—Adaptive Reasoning Model, a reasoning model capable of adaptively selectin
 </p>
 
 ## Environments
-This repository contains the codebase for SFT and RL based on [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) and [VeRL](https://github.com/volcengine/verl) **(Both of these repositories are adapted from official GitHub sources, and no author information from this paper is included)**.
+This repository contains the codebase for SFT and RL based on [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) and [VeRL](https://github.com/volcengine/verl).
 We use two separate conda environments for each stage:
 ```bash
 # SFT
@@ -45,6 +45,16 @@ conda activate arm_verl
 cd verl
 ```
 Make sure to specify the correct model and data path in the `.sh` file.
+### Data Process
+```bash
+# The training data is located in arm/verl/data/parquet.  
+# Alternatively, you can prepare your own training data, e.g.:
+python3 stage2_scripts/data_preprocess/gsm8k.py
+
+# You can also prepare data for the instruction-guided mode used in evaluation, e.g.:
+python3 stage2_scripts/data_preprocess/instruction_guided/gsm8k.py
+```
+
 ### Train
 ```bash
 bash stage2_scripts/trainer/run.sh
@@ -52,7 +62,11 @@ bash stage2_scripts/trainer/run.sh
 
 ### Generate
 ```bash
-bash stage2_scripts/generation/run.sh
+# Adaptive Mode
+bash stage2_scripts/generation/adaptive_run.sh
+
+# Instruction-Guided Mode. Specify the reasoning format in the .sh file:
+bash stage2_scripts/generation/instruction_guided_run.sh
 ```
 
 ### Evaluate

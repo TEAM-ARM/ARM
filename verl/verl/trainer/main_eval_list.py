@@ -35,6 +35,18 @@ token_dict = {
     "code": "<CODE>\n",
 }
 
+def find_instruct(_file):
+    if 'code' in _file:
+        return "<CODE>\n"
+    elif 'long_cot' in _file:
+        return "<LONG_COT>\n"
+    elif 'cot' in _file:
+        return "<COT>\n"
+    elif 'direct' in _file:
+        return "<ANSWER>\n"
+    else:
+        return ""
+
 def extract_solution(solution_str):
     pattern = r"<ANSWER>(.*)</ANSWER>"
     solution = re.search(pattern, solution_str, re.DOTALL)
@@ -156,6 +168,8 @@ def main(config):
             response_lst_full = responses[i]
             raw_response_lst_full = []
             for r in response_lst_full:
+                prefix = find_instruct(_file)
+                r = prefix + r
                 raw_response_lst_full.append(r)
             k = min(config.data.cons, len(raw_response_lst_full))
             response_lst = random.sample(raw_response_lst_full, k)
