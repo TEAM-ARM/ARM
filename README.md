@@ -6,7 +6,7 @@
 
 <div align="center"> 
 
-[![Paper](https://img.shields.io/badge/Paper-arXiv-b5212f.svg?logo=arxiv)](https://arxiv.org/)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-b5212f.svg?logo=arxiv)](https://arxiv.org/abs/2505.20258)
 [![Website](https://img.shields.io/badge/Website-ARM-f37024.svg)](https://team-arm.github.io/arm/) 
 [![HuggingFace](https://img.shields.io/badge/Data&Model-HuggingFace-ffd21e.svg?logo=huggingface)](https://huggingface.co/arm-team) 
 
