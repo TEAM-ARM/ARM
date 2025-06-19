@@ -104,7 +104,7 @@ bash stage2_scripts/evaluation/run.sh
 
 If you have any problems, please contact 
 [Siye Wu](mailto:siyewu24@m.fudan.edu.cn),
-[Jian Xie](mailto:jianx0321@gmail.com),
+[Jian Xie](mailto:jianx0321@gmail.com).
 
 ## Citation Information
 
